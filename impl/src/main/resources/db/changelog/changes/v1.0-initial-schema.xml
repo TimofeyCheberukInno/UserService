@@ -2,16 +2,10 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+                      https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
         <changeSet id="create_users_table" author="Tsimafei Chabiaruk">
-            <!--    First table - users.-->
-            <!--    Columns:-->
-            <!--    id-->
-            <!--    name-->
-            <!--    surname-->
-            <!--    birth_date-->
-            <!--    email-->
+
             <createTable tableName="users">
                 <column name="id" type="bigserial" autoIncrement="true">
                     <constraints primaryKey="true" nullable="false"/>
@@ -22,13 +16,6 @@
                 <column name="email" type="text"/>
             </createTable>
 
-            <!--    Second table - card_info-->
-            <!--    Columns:-->
-            <!--    id-->
-            <!--    user_id-->
-            <!--    number-->
-            <!--    holder-->
-            <!--    expiration_date-->
             <createTable tableName="card_info">
                 <column name="id" type="bigserial" autoIncrement="true">
                     <constraints primaryKey="true" nullable="false"/>
@@ -38,6 +25,22 @@
                 <column name="holder" type="varchar(100)"/>
                 <column name="expiration_date" type="timestamp"/>
             </createTable>
+
+        </changeSet>
+
+        <changeSet id="add_foreign_key" author="Tsimafei Chabiaruk">
+            <addForeignKeyConstraint
+                    baseTableName="card_info"
+                    baseColumnNames="user_id"
+                    constraintName="fk_card_user"
+                    referencedTableName="users"
+                    referencedColumnNames="id" />
+        </changeSet>
+
+        <changeSet id="create_user_id_index" author="Tsimafei Chabiaruk">
+            <createIndex tableName="card_info" indexName="idx_user_id">
+                <column name="user_id"/>
+            </createIndex>
         </changeSet>
 
 </databaseChangeLog>
