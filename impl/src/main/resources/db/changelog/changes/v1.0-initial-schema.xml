@@ -1,4 +1,43 @@
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog">
-    
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+        <changeSet id="create_users_table" author="Tsimafei Chabiaruk">
+            <!--    First table - users.-->
+            <!--    Columns:-->
+            <!--    id-->
+            <!--    name-->
+            <!--    surname-->
+            <!--    birth_date-->
+            <!--    email-->
+            <createTable tableName="users">
+                <column name="id" type="bigserial" autoIncrement="true">
+                    <constraints primaryKey="true" nullable="false"/>
+                </column>
+                <column name="name" type="varchar(50)"/>
+                <column name="surname" type="varchar(50)"/>
+                <column name="birth_date" type="timestamp"/>
+                <column name="email" type="text"/>
+            </createTable>
+
+            <!--    Second table - card_info-->
+            <!--    Columns:-->
+            <!--    id-->
+            <!--    user_id-->
+            <!--    number-->
+            <!--    holder-->
+            <!--    expiration_date-->
+            <createTable tableName="card_info">
+                <column name="id" type="bigserial" autoIncrement="true">
+                    <constraints primaryKey="true" nullable="false"/>
+                </column>
+                <column name="user_id" type="bigserial"/>
+                <column name="number" type="char(8)"/>
+                <column name="holder" type="varchar(100)"/>
+                <column name="expiration_date" type="timestamp"/>
+            </createTable>
+        </changeSet>
+
 </databaseChangeLog>
