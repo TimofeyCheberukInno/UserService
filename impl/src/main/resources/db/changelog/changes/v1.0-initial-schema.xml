@@ -27,7 +27,7 @@
                     <constraints primaryKey="true" nullable="false"/>
                 </column>
                 <column name="user_id" type="bigint"/>
-                <column name="number" type="char(8)"/>
+                <column name="number" type="char(16)"/>
                 <column name="holder" type="varchar(100)"/>
                 <column name="expiration_date" type="timestamp"/>
             </createTable>
