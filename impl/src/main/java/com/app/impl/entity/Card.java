@@ -41,12 +41,12 @@ public class Card {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "number", nullable = false, unique = true)
     private String cardNumber;
 
-    @Column(nullable = false, length = 100)
+    @Column(name = "holder", nullable = false, length = 100)
     private String cardHolderName;
 
-    @Column(nullable = false)
+    @Column(name = "expiration_date", nullable = false)
     LocalDate expirationDate;
 }
