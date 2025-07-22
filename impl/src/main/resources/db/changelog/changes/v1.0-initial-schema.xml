@@ -10,10 +10,18 @@
                 <column name="id" type="bigserial" autoIncrement="true">
                     <constraints primaryKey="true" nullable="false"/>
                 </column>
-                <column name="name" type="varchar(50)"/>
-                <column name="surname" type="varchar(50)"/>
-                <column name="birth_date" type="timestamp"/>
-                <column name="email" type="text"/>
+                <column name="name" type="varchar(50)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="surname" type="varchar(50)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="birth_date" type="timestamp">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="email" type="text">
+                    <constraints nullable="false" unique="true"/>
+                </column>
             </createTable>
 
             <rollback>
@@ -26,10 +34,18 @@
                 <column name="id" type="bigserial" autoIncrement="true">
                     <constraints primaryKey="true" nullable="false"/>
                 </column>
-                <column name="user_id" type="bigint"/>
-                <column name="number" type="char(16)"/>
-                <column name="holder" type="varchar(100)"/>
-                <column name="expiration_date" type="timestamp"/>
+                <column name="user_id" type="bigint">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="number" type="char(16)">
+                    <constraints nullable="false" unique="true"/>
+                </column>
+                <column name="holder" type="varchar(100)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="expiration_date" type="timestamp">
+                    <constraints nullable="false"/>
+                </column>
             </createTable>
 
             <addForeignKeyConstraint

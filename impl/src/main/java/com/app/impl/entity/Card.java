@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
@@ -40,9 +41,12 @@ public class Card {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(nullable = false, unique = true)
     private String cardNumber;
 
+    @Column(nullable = false, length = 100)
     private String cardHolderName;
 
+    @Column(nullable = false)
     LocalDate expirationDate;
 }
