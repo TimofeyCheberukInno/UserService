@@ -13,10 +13,10 @@ import com.app.impl.entity.Card;
 
 @Repository
 public interface CardRepository extends JpaRepository<Card,Long> {
-    List<Card> findByEmail(@Param("userEmail") String email);
+    Optional<Card> findByEmail(@Param("userEmail") String email);
 
     @Query("SELECT c FROM Card c JOIN FETCH c.user u WHERE u.email = :userEmail")
-    List<Card> findByEmailWithUser(String userEmail);
+    Optional<Card> findByEmailWithUser(String userEmail);
 
     @Modifying
     @Query("UPDATE Card с " +

@@ -8,6 +8,7 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Column;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
@@ -30,12 +31,16 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, length = 50)
     private String name;
 
+    @Column(nullable = false, length = 50)
     private String surname;
 
+    @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
+    @Column(nullable = false, unique = true)
     private String email;
 }
 
