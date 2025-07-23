@@ -1,5 +1,7 @@
 package com.app.impl.entity;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedQuery;
@@ -18,8 +20,6 @@ import lombok.Setter;
 import lombok.Getter;
 import lombok.Builder;
 
-import java.time.LocalDate;
-
 @Entity
 @Table(name = "card_info",
     indexes = {
@@ -37,7 +37,7 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE})
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 

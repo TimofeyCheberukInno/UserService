@@ -1,5 +1,7 @@
 package com.app.impl.mapper;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -17,4 +19,6 @@ public interface CardMapper {
     Card toEntity(CardCreateDto cardDto);
 
     Card toUpdateEntity(CardUpdateDto cardDto);
+
+    List<CardDto> toDtoList(List<Card> cards);
 }
