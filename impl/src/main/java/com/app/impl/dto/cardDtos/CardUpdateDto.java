@@ -1,14 +1,14 @@
 package com.app.impl.dto.cardDtos;
 
 import jakarta.validation.constraints.NotBlank;
-import org.hibernate.validator.constraints.CreditCardNumber;
+import jakarta.validation.constraints.Size;
 
-import static com.app.impl.dto.cardDtos.CardConstraints.CARD_NUMBER_BLANK_MSG;
-import static com.app.impl.dto.cardDtos.CardConstraints.CARD_NUMBER_INVALID_MSG;
+import static com.app.impl.dto.cardDtos.CardConstraints.*;
+import static com.app.impl.dto.cardDtos.CardConstraints.CARD_HOLDER_NAME_MAX_LENGTH;
 
 public record CardUpdateDto(
-        @NotBlank(message = CARD_NUMBER_BLANK_MSG)
-        @CreditCardNumber(message = CARD_NUMBER_INVALID_MSG)
-        String cardNumber
+        @NotBlank(message = CARD_HOLDER_NAME_BLANK_MSG)
+        @Size(max = CARD_HOLDER_NAME_MAX_LENGTH)
+        String cardHolderName
 ) {
 }

@@ -1,5 +1,6 @@
 package com.app.impl.repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,9 @@ import com.app.impl.entity.Card;
 
 @Repository
 public interface CardRepository extends JpaRepository<Card,Long> {
+    @Query("SELECT c FROM Card c JOIN FETCH c.user u WHERE c.id = :id")
+    Optional<Card> findByIdWithUser(Long id);
+
     Optional<Card> findByEmail(@Param("userEmail") String email);
 
     @Query("SELECT c FROM Card c JOIN FETCH c.user u WHERE u.email = :userEmail")
@@ -20,16 +24,16 @@ public interface CardRepository extends JpaRepository<Card,Long> {
 
     @Modifying
     @Query("UPDATE Card с " +
-            "SET с.user = :#{#card.user}, " +
-            "с.cardNumber = :#{#card.cardNumber}, " +
-            "с.cardHolderName = :#{#card.cardHolderName}, " +
-            "с.expirationDate = :#{#card.expirationDate} " +
+            "SET с.cardHolderName = :#{#card.cardHolderName} " +
             "WHERE с.id = :#{#card.id}")
-    int updateById(@Param("card") Card card);
+    Optional<Card> updateCard(@Param("card") Card card);
+
+    @Query("SELECT c FROM Card c WHERE c.id IN :ids")
+    List<Card> findAllByIds(Collection<Long> ids);
+
+    @Query("SELECT c FROM Card c JOIN FETCH c.user u WHERE c.id IN :ids")
+    List<Card> findAllByIdsWithUser(Collection<Long> ids);
 
     @Query("SELECT c FROM Card c JOIN FETCH c.user u")
     List<Card> findAllWithUser();
-
-    @Query("SELECT c FROM Card c JOIN FETCH c.user u WHERE c.id = :id")
-    Optional<Card> findByIdWithUser(Long id);
 }

@@ -1,4 +1,17 @@
 package com.app.impl.mapper;
 
-public class UserMapper {
+import com.app.impl.dto.userDtos.UserCreateDto;
+import com.app.impl.dto.userDtos.UserUpdateDto;
+import org.mapstruct.Mapper;
+
+import com.app.impl.dto.userDtos.UserDto;
+import com.app.impl.entity.User;
+
+@Mapper(componentModel = "spring")
+public interface UserMapper {
+    UserDto toDto(User user);
+
+    User toEntity(UserCreateDto userCreateDto);
+
+    User toUpdateEntity(UserUpdateDto userUpdateDto);
 }
