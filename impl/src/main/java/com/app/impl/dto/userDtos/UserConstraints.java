@@ -1,6 +1,6 @@
 package com.app.impl.dto.userDtos;
 
-public final class UserConstraints {
+public class UserConstraints {
     static final String BLANK_NAME_MSG = "User name should not be blank";
     static final int MAX_NAME_LENGTH = 50;
     static final String MAX_NAME_LENGTH_MSG = "User name size should be less than or equal to 50";
