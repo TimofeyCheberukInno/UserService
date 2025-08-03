@@ -1,0 +1,54 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+        <changeSet id="create_users_table" author="Tsimafei Chabiaruk">
+
+            <createTable tableName="users">
+                <column name="id" type="bigserial" autoIncrement="true">
+                    <constraints primaryKey="true" nullable="false"/>
+                </column>
+                <column name="name" type="varchar(50)"/>
+                <column name="surname" type="varchar(50)"/>
+                <column name="birth_date" type="timestamp"/>
+                <column name="email" type="text"/>
+            </createTable>
+
+            <rollback>
+                <dropTable tableName="users"/>
+            </rollback>
+        </changeSet>
+
+        <changeSet id="create_card_info_table_and_add_users_foreign_key" author="Tsimafei Chabiaruk">
+            <createTable tableName="card_info">
+                <column name="id" type="bigserial" autoIncrement="true">
+                    <constraints primaryKey="true" nullable="false"/>
+                </column>
+                <column name="user_id" type="bigint"/>
+                <column name="number" type="char(8)"/>
+                <column name="holder" type="varchar(100)"/>
+                <column name="expiration_date" type="timestamp"/>
+            </createTable>
+
+            <addForeignKeyConstraint
+                    baseTableName="card_info"
+                    baseColumnNames="user_id"
+                    constraintName="fk_card_user"
+                    referencedTableName="users"
+                    referencedColumnNames="id" />
+
+            <createIndex tableName="card_info" indexName="idx_user_id">
+                <column name="user_id"/>
+            </createIndex>
+
+            <rollback>
+                <dropForeignKeyConstraint
+                        baseTableName="card_info"
+                        constraintName="fk_card_user"/>
+                <dropTable tableName="card_info"/>
+            </rollback>
+        </changeSet>
+
+</databaseChangeLog>
