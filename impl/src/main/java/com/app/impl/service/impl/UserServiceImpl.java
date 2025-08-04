@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
 
             List<Long> notFoundIds = ids.stream()
                     .filter(id -> !existingIds.contains(id))
-                    .collect(Collectors.toList());
+                    .toList();
             throw new UserNotFoundException(LIST_OF_USERS_NOT_FOUND_BY_IDS_MSG + notFoundIds);
         }
 
