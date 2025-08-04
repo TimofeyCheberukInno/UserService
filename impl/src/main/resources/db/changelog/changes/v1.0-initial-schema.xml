@@ -16,7 +16,7 @@
                 <column name="surname" type="varchar(50)">
                     <constraints nullable="false"/>
                 </column>
-                <column name="birth_date" type="timestamp">
+                <column name="birth_date" type="date">
                     <constraints nullable="false"/>
                 </column>
                 <column name="email" type="text">
@@ -37,13 +37,13 @@
                 <column name="user_id" type="bigint">
                     <constraints nullable="false"/>
                 </column>
-                <column name="number" type="char(16)">
+                <column name="number" type="varchar(30)">
                     <constraints nullable="false" unique="true"/>
                 </column>
                 <column name="holder" type="varchar(100)">
                     <constraints nullable="false"/>
                 </column>
-                <column name="expiration_date" type="timestamp">
+                <column name="expiration_date" type="date">
                     <constraints nullable="false"/>
                 </column>
             </createTable>

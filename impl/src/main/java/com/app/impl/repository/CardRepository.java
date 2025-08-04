@@ -20,11 +20,11 @@ public interface CardRepository extends JpaRepository<Card,Long> {
 
     @Modifying
     @Query("UPDATE Card с " +
-            "SET с.user = #{#card.user}, " +
-            "с.cardNumber = #{#card.cardNumber}, " +
-            "с.cardHolderName = #{#card.cardHolderName}, " +
-            "с.expirationDate = #{#card.expirationDate} " +
-            "WHERE с.id = #{#card.id}")
+            "SET с.user = :#{#card.user}, " +
+            "с.cardNumber = :#{#card.cardNumber}, " +
+            "с.cardHolderName = :#{#card.cardHolderName}, " +
+            "с.expirationDate = :#{#card.expirationDate} " +
+            "WHERE с.id = :#{#card.id}")
     int updateById(@Param("card") Card card);
 
     @Query("SELECT c FROM Card c JOIN FETCH c.user u")

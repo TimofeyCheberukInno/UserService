@@ -41,7 +41,7 @@ public class Card {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "number", nullable = false, unique = true)
+    @Column(name = "number", nullable = false, unique = true, length = 30)
     private String cardNumber;
 
     @Column(name = "holder", nullable = false, length = 100)
