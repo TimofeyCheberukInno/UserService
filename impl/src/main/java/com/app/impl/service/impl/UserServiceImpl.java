@@ -22,9 +22,9 @@ import com.app.impl.exception.UserNotFoundException;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final String USER_NOT_FOUND_BY_ID_MSG = "User %d not found";
-    private final String USER_NOT_FOUND_BY_EMAIL_MSG = "User %s not found";
-    private final String LIST_OF_USERS_NOT_FOUND_BY_IDS_MSG = "Users not found for ids: ";
+    private static final String USER_NOT_FOUND_BY_ID_MSG = "User with id %d not found";
+    private static final String USER_NOT_FOUND_BY_EMAIL_MSG = "User with email %s not found";
+    private static final String LIST_OF_USERS_NOT_FOUND_BY_IDS_MSG = "Users not found for ids: ";
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
@@ -44,7 +44,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDto update(UserUpdateDto userUpdateDto) {
         User user = userMapper.toUpdateEntity(userUpdateDto);
-        User updatedUser = userRepository.updateUser(user).orElseThrow(() -> new UserNotFoundException(String.format(USER_NOT_FOUND_BY_ID_MSG, user.getId())));
+        User updatedUser = userRepository.updateUser(user).orElseThrow(
+                () -> new UserNotFoundException(String.format(USER_NOT_FOUND_BY_ID_MSG, user.getId()))
+        );
         return userMapper.toDto(updatedUser);
     }
 
@@ -55,18 +57,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDto findById(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(String.format(USER_NOT_FOUND_BY_ID_MSG, id)));
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new UserNotFoundException(String.format(USER_NOT_FOUND_BY_ID_MSG, id))
+        );
         return userMapper.toDto(user);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDto findByEmail(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(String.format(USER_NOT_FOUND_BY_EMAIL_MSG, email)));
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new UserNotFoundException(String.format(USER_NOT_FOUND_BY_EMAIL_MSG, email))
+        );
         return userMapper.toDto(user);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserDto> findAllByIds(Collection<Long> ids) {
         List<User> users = userRepository.findAllById(ids);
 
@@ -85,8 +94,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserDto> findAll() {
-        List<User> users = userRepository.findAll();
-        return userMapper.toDtoList(users);
+        return userMapper.toDtoList(userRepository.findAll());
     }
 }
