@@ -25,5 +25,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "WHERE u.id = :#{#updateUser.id} ")
     Optional<User> updateUser(@Param("updateUser") User user);
 
+    @Query("SELECT u FROM User u WHERE u.id IN :ids")
     List<User> findAllById(Collection<Long> ids);
 }
