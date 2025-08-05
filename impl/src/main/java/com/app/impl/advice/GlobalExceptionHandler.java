@@ -11,6 +11,10 @@ import org.springframework.web.context.request.WebRequest;
 import com.app.impl.exception.UserNotFoundException;
 import com.app.impl.exception.CardNotFoundException;
 
+// TODO: ConstraintViolationException
+// TODO: MethodArgumentTypeMismatchException
+// TODO: MethodArgumentNotValidException
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)

@@ -1,0 +1,133 @@
+package com.app.impl.controller;
+
+import java.util.List;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import com.app.impl.dto.cardDtos.CardWithUserDto;
+import com.app.impl.dto.cardDtos.CardCreateDto;
+import com.app.impl.dto.cardDtos.CardUpdateDto;
+import com.app.impl.dto.cardDtos.CardDto;
+import com.app.impl.service.CardService;
+
+@RestController
+@RequestMapping("/api/cards")
+@Validated
+public class CardController {
+    private final CardService cardService;
+
+    @Autowired
+    public CardController(CardService cardService){
+        this.cardService = cardService;
+    }
+
+    @PostMapping
+    public ResponseEntity<CardDto> createCard(@RequestBody @Valid CardCreateDto createDto){
+        CardDto dto = cardService.create(createDto);
+        return new ResponseEntity<>(
+                dto,
+                HttpStatus.CREATED
+        );
+    }
+
+    @PutMapping
+    public ResponseEntity<CardDto> updateCard(@RequestBody @Valid CardUpdateDto updateDto){
+        CardDto dto = cardService.update(updateDto);
+        return new ResponseEntity<>(
+                dto,
+                HttpStatus.OK
+        );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id){
+        cardService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CardDto> getCardById(@PathVariable Long id){
+        CardDto dto = cardService.findById(id);
+        return new ResponseEntity<>(
+                dto,
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("/{id}/with-user")
+    public ResponseEntity<CardWithUserDto> getCardWithUserById(@PathVariable Long id){
+        CardWithUserDto dto = cardService.findByIdWithUser(id);
+        return new ResponseEntity<>(
+                dto,
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("/by-email")
+    public ResponseEntity<CardDto> getCardByEmail(@RequestParam @Email String email){
+        CardDto dto = cardService.findByEmail(email);
+        return new ResponseEntity<>(
+                dto,
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("/by-email/with-user")
+    public ResponseEntity<CardWithUserDto> getCardWithUserByEmail(@RequestParam @Email String email){
+        CardWithUserDto dto = cardService.findByEmailWithUser(email);
+        return new ResponseEntity<>(
+                dto,
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("/by-ids")
+    public ResponseEntity<List<CardDto>> getListOfCardsById(@RequestParam List<Long> ids){
+        List<CardDto> dtos = cardService.findAllByIds(ids);
+        return new ResponseEntity<>(
+                dtos,
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("/by-ids/with-user")
+    public ResponseEntity<List<CardWithUserDto>> getListOfCardsWithUserById(@RequestParam List<Long> ids){
+        List<CardWithUserDto> dtos = cardService.findAllByIdsWithUser(ids);
+        return new ResponseEntity<>(
+                dtos,
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CardDto>> getAll(){
+        List<CardDto> dtos = cardService.findAll();
+        return new ResponseEntity<>(
+                dtos,
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("/with-user")
+    public ResponseEntity<List<CardWithUserDto>> getAllWithUser(){
+        List<CardWithUserDto> dtos = cardService.findAllWithUser();
+        return new ResponseEntity<>(
+                dtos,
+                HttpStatus.OK
+        );
+    }
+}
