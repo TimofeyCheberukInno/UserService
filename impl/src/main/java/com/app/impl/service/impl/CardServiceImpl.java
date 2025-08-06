@@ -5,11 +5,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.app.impl.dto.cardDtos.CardWithUserDto;
+import com.app.impl.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.app.impl.dto.cardDtos.CardWithUserDto;
+import com.app.impl.entity.User;
+import com.app.impl.repository.UserRepository;
 import com.app.impl.exception.CardNotFoundException;
 import com.app.impl.dto.cardDtos.CardCreateDto;
 import com.app.impl.dto.cardDtos.CardDto;
@@ -22,33 +25,41 @@ import com.app.impl.service.CardService;
 @Service
 public class CardServiceImpl implements CardService {
     private final CardRepository cardRepository;
+    private final UserRepository userRepository;
     private final CardMapper cardMapper;
     private static final String CARD_NOT_FOUND_BY_ID_MSG = "Card with id %d was not found";
     private static final String CARD_NOT_FOUND_BY_EMAIL_MSG = "Card with email %s was not found";
     private static final String LIST_OF_CARDS_NOT_FOUND_BY_IDS_MSG = "Cards not found for ids: ";
+    private static final String USER_NOT_FOUND_BY_ID_MSG = "User with id %d not found";
 
     @Autowired
-    public CardServiceImpl(CardRepository cardRepository, CardMapper cardMapper) {
+    public CardServiceImpl(
+            CardRepository cardRepository,
+            UserRepository userRepository,
+            CardMapper cardMapper
+    ) {
         this.cardRepository = cardRepository;
+        this.userRepository = userRepository;
         this.cardMapper = cardMapper;
     }
 
     @Override
     @Transactional
     public CardDto create(CardCreateDto cardCreateDto) {
+        User user = userRepository.findById(cardCreateDto.userId()).orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND_BY_ID_MSG));
         Card card = cardMapper.toEntity(cardCreateDto);
+        card.setUser(user);
         Card createdCard = cardRepository.save(card);
         return cardMapper.toDto(createdCard);
     }
 
     @Override
     @Transactional
-    public CardDto update(CardUpdateDto cardUpdateDto) {
+    public int update(CardUpdateDto cardUpdateDto) {
+        cardRepository.findById(cardUpdateDto.id()).orElseThrow(() -> new CardNotFoundException(CARD_NOT_FOUND_BY_ID_MSG));
+
         Card card = cardMapper.toUpdateEntity(cardUpdateDto);
-        Card updatedCard = cardRepository.updateCard(card).orElseThrow(
-                () -> new CardNotFoundException(String.format(CARD_NOT_FOUND_BY_ID_MSG,  card.getId()))
-        );
-        return cardMapper.toDto(updatedCard);
+        return cardRepository.updateCard(card);
     }
 
     @Override

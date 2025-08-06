@@ -44,10 +44,10 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<UserDto> updateUser(@RequestBody @Valid UserUpdateDto updateDto){
-        UserDto dto = userService.update(updateDto);
+    public ResponseEntity<Integer> updateUser(@RequestBody @Valid UserUpdateDto updateDto){
+        int countOfUpdatedEntities = userService.update(updateDto);
         return new ResponseEntity<>(
-                dto,
+                countOfUpdatedEntities,
                 HttpStatus.OK
         );
     }

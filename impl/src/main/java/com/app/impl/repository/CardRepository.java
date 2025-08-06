@@ -26,7 +26,7 @@ public interface CardRepository extends JpaRepository<Card,Long> {
     @Query("UPDATE Card с " +
             "SET с.cardHolderName = :#{#card.cardHolderName} " +
             "WHERE с.id = :#{#card.id}")
-    Optional<Card> updateCard(@Param("card") Card card);
+    int updateCard(@Param("card") Card card);
 
     @Query("SELECT c FROM Card c WHERE c.id IN :ids")
     List<Card> findAllByIds(Collection<Long> ids);

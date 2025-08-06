@@ -23,7 +23,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "u.birthDate = :#{#updateUser.birthDate}, " +
             "u.email = :#{#updateUser.email} " +
             "WHERE u.id = :#{#updateUser.id} ")
-    Optional<User> updateUser(@Param("updateUser") User user);
+    int updateUser(@Param("updateUser") User user);
 
     @Query("SELECT u FROM User u WHERE u.id IN :ids")
     List<User> findAllById(Collection<Long> ids);

@@ -9,7 +9,7 @@ import com.app.impl.dto.userDtos.UserUpdateDto;
 
 public interface UserService {
     UserDto create(UserCreateDto userCreateDto);
-    UserDto update(UserUpdateDto userUpdateDto);
+    int update(UserUpdateDto userUpdateDto);
     void delete(Long id);
     UserDto findById(Long id);
     UserDto findByEmail(String email);

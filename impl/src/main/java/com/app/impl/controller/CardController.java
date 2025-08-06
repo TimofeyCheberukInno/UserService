@@ -45,10 +45,10 @@ public class CardController {
     }
 
     @PutMapping
-    public ResponseEntity<CardDto> updateCard(@RequestBody @Valid CardUpdateDto updateDto){
-        CardDto dto = cardService.update(updateDto);
+    public ResponseEntity<Integer> updateCard(@RequestBody @Valid CardUpdateDto updateDto){
+        int countOfUpdatedEntities = cardService.update(updateDto);
         return new ResponseEntity<>(
-                dto,
+                countOfUpdatedEntities,
                 HttpStatus.OK
         );
     }

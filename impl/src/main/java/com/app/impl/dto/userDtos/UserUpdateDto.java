@@ -2,10 +2,7 @@ package com.app.impl.dto.userDtos;
 
 import java.time.LocalDate;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import static com.app.impl.dto.userDtos.UserConstraints.BLANK_NAME_MSG;
 import static com.app.impl.dto.userDtos.UserConstraints.MAX_NAME_LENGTH;
@@ -19,6 +16,9 @@ import static com.app.impl.dto.userDtos.UserConstraints.INVALID_EMAIL_MSG;
 
 
 public record UserUpdateDto(
+        @Positive
+        Long id,
+
         @NotBlank(message = BLANK_NAME_MSG)
         @Size(max = MAX_NAME_LENGTH, message = MAX_NAME_LENGTH_MSG)
         String name,

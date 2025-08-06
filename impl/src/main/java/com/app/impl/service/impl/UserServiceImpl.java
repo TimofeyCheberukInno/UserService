@@ -42,12 +42,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDto update(UserUpdateDto userUpdateDto) {
+    public int update(UserUpdateDto userUpdateDto) {
+        userRepository.findById(userUpdateDto.id()).orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND_BY_ID_MSG));
+
         User user = userMapper.toUpdateEntity(userUpdateDto);
-        User updatedUser = userRepository.updateUser(user).orElseThrow(
-                () -> new UserNotFoundException(String.format(USER_NOT_FOUND_BY_ID_MSG, user.getId()))
-        );
-        return userMapper.toDto(updatedUser);
+        return userRepository.updateUser(user);
     }
 
     @Override

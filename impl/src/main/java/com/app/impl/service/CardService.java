@@ -10,7 +10,7 @@ import com.app.impl.dto.cardDtos.CardWithUserDto;
 
 public interface CardService {
     CardDto create(CardCreateDto cardCreateDto);
-    CardDto update(CardUpdateDto cardUpdateDto);
+    int update(CardUpdateDto cardUpdateDto);
     void delete(Long id);
     CardDto findById(Long id);
     CardWithUserDto findByIdWithUser(Long id);
