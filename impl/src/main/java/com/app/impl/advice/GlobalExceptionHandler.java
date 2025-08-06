@@ -13,11 +13,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import com.app.impl.exception.UserNotFoundException;
 import com.app.impl.exception.CardNotFoundException;
 
-// TODO: Уязвимость безопасности в продакшене
-//  Никогда не возвращайте технические сообщения об ошибках (ex.getMessage())
-//  клиенту в продакшене!
-//  Это может раскрыть внутреннюю структуру приложения.
-
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)
