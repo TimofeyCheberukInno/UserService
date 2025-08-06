@@ -1,6 +1,8 @@
 package com.app.impl.repository;
 
+import java.util.Collection;
 import java.util.Optional;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -20,7 +22,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "u.surname = :#{#updateUser.surname}, " +
             "u.birthDate = :#{#updateUser.birthDate}, " +
             "u.email = :#{#updateUser.email} " +
-            "WHERE u.id = :#{#updateUser.id} " +
-            "AND NOT EXISTS (SELECT u2 FROM User u2 WHERE u2.email = :#{#updateUser.email} AND u2.id != :#{#updateUser.id})")
+            "WHERE u.id = :#{#updateUser.id} ")
     int updateUser(@Param("updateUser") User user);
+
+    @Query("SELECT u FROM User u WHERE u.id IN :ids")
+    List<User> findAllById(Collection<Long> ids);
 }
