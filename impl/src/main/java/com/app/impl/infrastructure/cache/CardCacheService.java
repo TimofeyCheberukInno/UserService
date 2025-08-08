@@ -55,7 +55,7 @@ public class CardCacheService {
         log.info("Updating cache for {} with id {}...", CARDS_WITH_USER_CACHE_NAME, card.id());
     }
 
-    public Optional<CardDto> getByIdWithoutUser(String CARDS_CACHE_NAME, Long id) {
+    public Optional<CardDto> getByIdWithoutUser(Long id) {
         Object object = redisTemplate.opsForValue().get(makeKey(CARDS_CACHE_NAME, id));
         if(object instanceof CardDto){
             log.info("Cache hit for {} with id {}!", CARDS_CACHE_NAME, id);
@@ -81,7 +81,7 @@ public class CardCacheService {
         List<Long> cachedCardsIds = cachedCards.stream()
                 .map(CardDto::id)
                 .toList();
-        log.info("Cache hit for {} with ids {}!", CARDS_CACHE_NAME, ids);
+        log.info("Cache hit for {} with ids {}!", CARDS_CACHE_NAME, cachedCardsIds);
 
         return cachedCards;
     }
@@ -92,7 +92,7 @@ public class CardCacheService {
         List<Long> cachedCardsIds = cachedCards.stream()
                 .map(CardWithUserDto::id)
                 .toList();
-        log.info("Cache hit for {} with ids {}!", CARDS_CACHE_NAME, ids);
+        log.info("Cache hit for {} with ids {}!", CARDS_CACHE_NAME, cachedCardsIds);
 
         return cachedCards;
     }

@@ -2,15 +2,16 @@ package com.app.impl.service.impl;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.app.impl.exception.UserNotFoundException;
-import com.app.impl.infrastructure.cache.CardCacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.app.impl.exception.UserNotFoundException;
+import com.app.impl.infrastructure.cache.CardCacheService;
 import com.app.impl.dto.cardDtos.CardWithUserDto;
 import com.app.impl.entity.User;
 import com.app.impl.repository.UserRepository;
@@ -30,7 +31,6 @@ public class CardServiceImpl implements CardService {
     private final CardMapper cardMapper;
     private final CardCacheService cacheService;
     private static final String CARD_NOT_FOUND_BY_ID_MSG = "Card with id %d was not found";
-    private static final String CARD_NOT_FOUND_BY_EMAIL_MSG = "Card with email %s was not found";
     private static final String LIST_OF_CARDS_NOT_FOUND_BY_IDS_MSG = "Cards not found for ids: ";
     private static final String USER_NOT_FOUND_BY_ID_MSG = "User with id %d not found";
 
@@ -55,58 +55,88 @@ public class CardServiceImpl implements CardService {
         card.setUser(user);
         Card createdCard = cardRepository.save(card);
 
-        // TODO: add caching
+        CardDto dto = cardMapper.toDto(createdCard);
+        cacheService.saveCardWithoutUser(dto);
 
-        return cardMapper.toDto(createdCard);
+        return dto;
     }
 
     @Override
     @Transactional
     public int update(CardUpdateDto cardUpdateDto) {
         cardRepository.findById(cardUpdateDto.id()).orElseThrow(() -> new CardNotFoundException(CARD_NOT_FOUND_BY_ID_MSG));
-        // TODO: add caching
         Card card = cardMapper.toUpdateEntity(cardUpdateDto);
-        return cardRepository.updateCard(card);
+
+        int cntOfUpdatedCards = cardRepository.updateCard(card);
+        cacheService.updateCardWithoutUser(cardMapper.toDto(cardRepository.findById(cardUpdateDto.id()).get()));
+        // updates cache of card with user
+        findByIdWithUser(cardUpdateDto.id());
+
+        return cntOfUpdatedCards;
     }
 
     @Override
     @Transactional
     public void delete(Long id) {
+        cardRepository.findById(id).orElseThrow(
+                () -> new CardNotFoundException(CARD_NOT_FOUND_BY_ID_MSG));
         cardRepository.deleteById(id);
-        // TODO: add caching
+
+        cacheService.delete(id);
     }
 
     @Override
     @Transactional(readOnly = true)
     public CardDto findById(Long id) {
+        Optional<CardDto> cachedCard = cacheService.getByIdWithoutUser(id);
+
+        if(cachedCard.isPresent()) {
+            return cachedCard.get();
+        }
+
         Card card = cardRepository.findById(id).orElseThrow(
                 () -> new CardNotFoundException(String.format(CARD_NOT_FOUND_BY_ID_MSG, id))
         );
-        // TODO: add caching
+
         return cardMapper.toDto(card);
     }
 
     @Override
     @Transactional(readOnly = true)
     public CardWithUserDto findByIdWithUser(Long id) {
-        // TODO: put in cache card with user
+        Optional<CardWithUserDto> cachedCard = cacheService.getByIdWithUser(id);
+        if(cachedCard.isPresent()) {
+            return cachedCard.get();
+        }
+
         Card card = cardRepository.findByIdWithUser(id).orElseThrow(
                 () -> new CardNotFoundException(String.format(CARD_NOT_FOUND_BY_ID_MSG, id))
         );
-        return cardMapper.toDtoWithUser(card);
+        CardWithUserDto dto = cardMapper.toDtoWithUser(card);
+        cacheService.saveCardWithUser(dto);
+        return dto;
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<CardDto> findByIds(Collection<Long> ids) {
-        List<Card> cards = cardRepository.findAllById(ids);
+        List<CardDto> cachedCards = cacheService.getByIdsWithoutUser(ids);
+        Set<Long> cachedCardsIds = cachedCards.stream()
+                .map(CardDto::id)
+                .collect(Collectors.toSet());
 
-        if(cards.size() < ids.size()) {
+        List<Long> notCachedIds = ids.stream()
+                .filter(id -> !cachedCardsIds.contains(id))
+                .toList();
+
+        List<Card> cards = cardRepository.findAllById(notCachedIds);
+
+        if(cards.size() < notCachedIds.size()) {
             Set<Long> existingIds = cards.stream()
                     .map(Card::getId)
                     .collect(Collectors.toSet());
 
-            List<Long> notExistingIds = ids.stream()
+            List<Long> notExistingIds = notCachedIds.stream()
                     .filter(id -> !existingIds.contains(id))
                     .toList();
 
@@ -119,15 +149,23 @@ public class CardServiceImpl implements CardService {
     @Override
     @Transactional(readOnly = true)
     public List<CardWithUserDto> findByIdsWithUser(Collection<Long> ids) {
-        // TODO: put in cache card with user
+        List<CardWithUserDto> cachedCards = cacheService.getByIdsWithUser(ids);
+        Set<Long> cachedCardsIds = cachedCards.stream()
+                .map(CardWithUserDto::id)
+                .collect(Collectors.toSet());
+
+        List<Long> notCachedIds = ids.stream()
+                .filter(id -> !cachedCardsIds.contains(id))
+                .toList();
+
         List<Card> cards = cardRepository.findAllByIdsWithUser(ids);
 
-        if(cards.size() < ids.size()) {
+        if(cards.size() < notCachedIds.size()) {
             Set<Long> existingIds = cards.stream()
                     .map(Card::getId)
                     .collect(Collectors.toSet());
 
-            List<Long> notExistingIds = ids.stream()
+            List<Long> notExistingIds = notCachedIds.stream()
                     .filter(id -> !existingIds.contains(id))
                     .toList();
 
