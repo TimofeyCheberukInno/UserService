@@ -14,8 +14,6 @@ public interface CardService {
     void delete(Long id);
     CardDto findById(Long id);
     CardWithUserDto findByIdWithUser(Long id);
-    CardDto findByEmail(String email);
-    CardWithUserDto findByEmailWithUser(String email);
     List<CardDto> findAllByIds(Collection<Long> ids);
     List<CardWithUserDto> findAllByIdsWithUser(Collection<Long> ids);
     List<CardDto> findAll();

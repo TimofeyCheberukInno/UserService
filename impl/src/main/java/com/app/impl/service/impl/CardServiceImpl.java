@@ -93,24 +93,6 @@ public class CardServiceImpl implements CardService {
 
     @Override
     @Transactional(readOnly = true)
-    public CardDto findByEmail(String email) {
-        Card card = cardRepository.findByEmail(email).orElseThrow(
-                () -> new  CardNotFoundException(String.format(CARD_NOT_FOUND_BY_EMAIL_MSG, email))
-        );
-        return cardMapper.toDto(card);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public CardWithUserDto findByEmailWithUser(String email) {
-        Card card = cardRepository.findByEmailWithUser(email).orElseThrow(
-                () -> new  CardNotFoundException(String.format(CARD_NOT_FOUND_BY_EMAIL_MSG, email))
-        );
-        return cardMapper.toDtoWithUser(card);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public List<CardDto> findAllByIds(Collection<Long> ids) {
         List<Card> cards = cardRepository.findAllById(ids);
 

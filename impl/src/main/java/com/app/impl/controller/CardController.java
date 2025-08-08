@@ -77,24 +77,6 @@ public class CardController {
         );
     }
 
-    @GetMapping("/by-email")
-    public ResponseEntity<CardDto> getCardByEmail(@RequestParam @Email String email){
-        CardDto dto = cardService.findByEmail(email);
-        return new ResponseEntity<>(
-                dto,
-                HttpStatus.OK
-        );
-    }
-
-    @GetMapping("/by-email/with-user")
-    public ResponseEntity<CardWithUserDto> getCardWithUserByEmail(@RequestParam @Email String email){
-        CardWithUserDto dto = cardService.findByEmailWithUser(email);
-        return new ResponseEntity<>(
-                dto,
-                HttpStatus.OK
-        );
-    }
-
     @GetMapping("/by-ids")
     public ResponseEntity<List<CardDto>> getListOfCardsById(@RequestParam List<Long> ids){
         List<CardDto> dtos = cardService.findAllByIds(ids);

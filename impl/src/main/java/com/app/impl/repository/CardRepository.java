@@ -17,12 +17,6 @@ public interface CardRepository extends JpaRepository<Card,Long> {
     @Query("SELECT c FROM Card c JOIN FETCH c.user u WHERE c.id = :id")
     Optional<Card> findByIdWithUser(@Param("id") Long id);
 
-    //FIXME
-    Optional<Card> findByEmail(@Param("userEmail") String email);
-
-    @Query("SELECT c FROM Card c JOIN FETCH c.user u WHERE u.email = :userEmail")
-    Optional<Card> findByEmailWithUser(@Param("userEmail") String userEmail);
-
     @Modifying
     @Query("UPDATE Card с " +
             "SET с.cardHolderName = :#{#card.cardHolderName} " +
