@@ -6,7 +6,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.app.impl.exception.UserNotFoundException;
-import com.app.impl.infrastructure.cache.CacheService;
+import com.app.impl.infrastructure.cache.UserCacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,8 +28,9 @@ public class CardServiceImpl implements CardService {
     private final CardRepository cardRepository;
     private final UserRepository userRepository;
     private final CardMapper cardMapper;
-    private final CacheService cacheService;
-    private static final String CARDS_CACHE_NAME = "users";
+    private final UserCacheService cacheService;
+    private static final String CARDS_CACHE_NAME = "cards";
+    private static final String CARDS_WITH_USER_CACHE_NAME = "cards-with-user";
     private static final String CARD_NOT_FOUND_BY_ID_MSG = "Card with id %d was not found";
     private static final String CARD_NOT_FOUND_BY_EMAIL_MSG = "Card with email %s was not found";
     private static final String LIST_OF_CARDS_NOT_FOUND_BY_IDS_MSG = "Cards not found for ids: ";
@@ -40,7 +41,7 @@ public class CardServiceImpl implements CardService {
             CardRepository cardRepository,
             UserRepository userRepository,
             CardMapper cardMapper,
-            CacheService cacheService
+            UserCacheService cacheService
     ) {
         this.cardRepository = cardRepository;
         this.userRepository = userRepository;

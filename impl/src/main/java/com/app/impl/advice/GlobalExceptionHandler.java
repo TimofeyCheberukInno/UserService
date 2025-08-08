@@ -13,6 +13,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import com.app.impl.exception.UserNotFoundException;
 import com.app.impl.exception.CardNotFoundException;
 
+// TODO: add ClassCastException
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)

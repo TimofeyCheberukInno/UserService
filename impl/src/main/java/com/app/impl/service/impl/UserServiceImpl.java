@@ -1,11 +1,9 @@
 package com.app.impl.service.impl;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import com.app.impl.infrastructure.cache.CacheService;
+import com.app.impl.infrastructure.cache.UserCacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,8 +21,8 @@ import com.app.impl.exception.UserNotFoundException;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final CacheService cacheService;
-    private static final String USERS_CACHE_NAME = "users";
+    private final UserCacheService cacheService;
+    private static final String USERS_CACHE_PREFIX = "users";
     private static final String USER_NOT_FOUND_BY_ID_MSG = "User with id %d not found";
     private static final String USER_NOT_FOUND_BY_EMAIL_MSG = "User with email %s not found";
     private static final String LIST_OF_USERS_NOT_FOUND_BY_IDS_MSG = "Users not found for ids: ";
@@ -33,7 +31,7 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(
             UserRepository userRepository,
             UserMapper userMapper,
-            CacheService cacheService
+            UserCacheService cacheService
     ) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
@@ -45,7 +43,7 @@ public class UserServiceImpl implements UserService {
     public UserDto create(UserCreateDto userCreateDto) {
         User user = userMapper.toEntity(userCreateDto);
         User createdUser = userRepository.save(user);
-        cacheService.putCache(USERS_CACHE_NAME, createdUser.getId(), createdUser.getEmail(), createdUser);
+        cacheService.save(USERS_CACHE_PREFIX, createdUser);
         return userMapper.toDto(createdUser);
     }
 
@@ -57,7 +55,7 @@ public class UserServiceImpl implements UserService {
         int cntOfUpdatedUsers = userRepository.updateUser(user);
 
         User updatedUser = userRepository.findById(user.getId()).get();
-        cacheService.putCache(USERS_CACHE_NAME, updatedUser.getId(), updatedUser.getEmail(), updatedUser);
+        cacheService.update(USERS_CACHE_PREFIX, updatedUser);
 
         return cntOfUpdatedUsers;
     }
@@ -68,15 +66,16 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new UserNotFoundException(USER_NOT_FOUND_BY_ID_MSG));
         userRepository.deleteById(id);
-        cacheService.evictFromCache(USERS_CACHE_NAME, id, user.getEmail());
+
+        cacheService.delete(USERS_CACHE_PREFIX, user.getId(), user.getEmail());
     }
 
     @Override
     @Transactional(readOnly = true)
     public UserDto findById(Long id) {
-        User cachedUser = cacheService.getFromCache(USERS_CACHE_NAME, id, User.class);
-        if(cachedUser != null){
-            return userMapper.toDto(cachedUser);
+        Optional<User> cachedUser = cacheService.getById(USERS_CACHE_PREFIX, id);
+        if(cachedUser.isPresent()) {
+            return userMapper.toDto(cachedUser.get());
         }
 
         User user = userRepository.findById(id).orElseThrow(
@@ -88,9 +87,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public UserDto findByEmail(String email) {
-        User cachedUser = cacheService.getFromCache(USERS_CACHE_NAME, email, User.class);
-        if(cachedUser != null){
-            return userMapper.toDto(cachedUser);
+        Optional<User> cachedUser = cacheService.getByEmail(USERS_CACHE_PREFIX, email);
+        if(cachedUser.isPresent()) {
+            return userMapper.toDto(cachedUser.get());
         }
 
         User user = userRepository.findByEmail(email).orElseThrow(
@@ -102,9 +101,14 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public List<UserDto> findAllByIds(Collection<Long> ids) {
-        List<User> users = userRepository.findAllById(ids);
+        List<User> cachedUsers = cacheService.getByIds(USERS_CACHE_PREFIX, ids);
 
-        if(users.size() < ids.size()){
+        List<Long> idsToTakeInDB = findNotCachedUsersIds(ids, cachedUsers);
+
+        List<User> users = userRepository.findAllById(idsToTakeInDB);
+
+        users.addAll(cachedUsers);
+        if(users.size() + cachedUsers.size() < ids.size()){
             Set<Long> existingIds = users.stream()
                     .map(User::getId)
                     .collect(Collectors.toSet());
@@ -122,5 +126,22 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public List<UserDto> findAll() {
         return userMapper.toDtoList(userRepository.findAll());
+    }
+
+    private List<Long> findNotCachedUsersIds(Collection<Long> ids, List<User> cachedUsers) {
+        Set<Long> cachedUsersIds = new HashSet<>(cachedUsers.size());
+        for (User user : cachedUsers) {
+            cachedUsersIds.add(user.getId());
+        }
+
+        List<Long> idsToTakeInDB = new ArrayList<>();
+        if(cachedUsers.size() < ids.size()) {
+            for(Long id : ids) {
+                if(!cachedUsersIds.contains(id)) {
+                    idsToTakeInDB.add(id);
+                }
+            }
+        }
+        return idsToTakeInDB;
     }
 }
