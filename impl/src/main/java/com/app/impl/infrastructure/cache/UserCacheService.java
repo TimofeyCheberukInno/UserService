@@ -18,53 +18,55 @@ import com.app.impl.entity.User;
 public class UserCacheService {
     private final RedisTemplate<String, Object> redisTemplate;
     private static final int TIME_TO_LIVE_FOR_USER_IN_MINUTES = 60;
+    private static final String USERS_CACHE_PREFIX = "users";
 
     @Autowired
     public UserCacheService(RedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 
-    public void save(String hashPrefix, User user){
+    public void save(User user){
         redisTemplate.opsForValue().set(
-                makeKey(hashPrefix, String.valueOf(user.getId())),
+                makeKey(USERS_CACHE_PREFIX, String.valueOf(user.getId())),
                 user,
                 Duration.ofMinutes(TIME_TO_LIVE_FOR_USER_IN_MINUTES));
-        log.info("Putting cache for {} with id {}...", hashPrefix, user.getId());
+        log.info("Putting cache for {} with id {}...", USERS_CACHE_PREFIX, user.getId());
 
         redisTemplate.opsForValue().set(
-                makeKey(hashPrefix, user.getEmail()),
+                makeKey(USERS_CACHE_PREFIX, user.getEmail()),
                 user,
                 Duration.ofMinutes(TIME_TO_LIVE_FOR_USER_IN_MINUTES));
-        log.info("Putting cache for {} with id {}...", hashPrefix, user.getEmail());
+        log.info("Putting cache for {} with id {}...", USERS_CACHE_PREFIX, user.getEmail());
     }
 
-    public void update(String hashPrefix, User user){
-        save(hashPrefix, user);
+    public void update(User user){
+        save(user);
+        log.info("Updating cache for {} with id {}...", USERS_CACHE_PREFIX, user.getId());
     }
 
-    public Optional<User> getById(String hashPrefix, Long id){
-        Object object = redisTemplate.opsForValue().get(makeKey(hashPrefix, String.valueOf(id)));
+    public Optional<User> getById(Long id){
+        Object object = redisTemplate.opsForValue().get(makeKey(USERS_CACHE_PREFIX, String.valueOf(id)));
         if(object instanceof User){
-            log.info("Cache hit for {} with id {}!", hashPrefix, id);
+            log.info("Cache hit for {} with id {}!", USERS_CACHE_PREFIX, id);
             return Optional.of((User) object);
         }
-        log.info("Cache miss for {} with id {}!", hashPrefix, id);
+        log.info("Cache miss for {} with id {}!", USERS_CACHE_PREFIX, id);
         return Optional.empty();
     }
 
-    public Optional<User> getByEmail(String hashPrefix, String email){
-        Object object = redisTemplate.opsForValue().get(makeKey(hashPrefix, email));
+    public Optional<User> getByEmail(String email){
+        Object object = redisTemplate.opsForValue().get(makeKey(USERS_CACHE_PREFIX, email));
         if(object instanceof User){
-            log.info("Cache hit for {} with email {}!", hashPrefix, email);
+            log.info("Cache hit for {} with email {}!", USERS_CACHE_PREFIX, email);
             return Optional.of((User) object);
         }
-        log.info("Cache miss for {} with email {}!", hashPrefix, email);
+        log.info("Cache miss for {} with email {}!", USERS_CACHE_PREFIX, email);
         return Optional.empty();
     }
 
-    public List<User> getByIds(String hashPrefix, Collection<Long> ids){
+    public List<User> getByIds(Collection<Long> ids){
         List<String> keys = ids.stream()
-                .map(id -> makeKey(hashPrefix, String.valueOf(id)))
+                .map(id -> makeKey(USERS_CACHE_PREFIX, String.valueOf(id)))
                 .toList();
 
         List<Object> usersWithNulls =
@@ -88,21 +90,19 @@ public class UserCacheService {
         List<Long> cachedUsersIds = cachedUsers.stream()
                         .map(User::getId)
                         .toList();
-        log.info("Cache hit for {} with ids {}!", hashPrefix, cachedUsersIds);
+        log.info("Cache hit for {} with ids {}!", USERS_CACHE_PREFIX, cachedUsersIds);
 
-        return users.stream()
-                .map(object -> (User) object)
-                .toList();
+        return cachedUsers;
     }
 
-    public void delete(String hashPrefix, Long id, String email){
-        redisTemplate.delete(makeKey(hashPrefix, String.valueOf(id)));
-        log.info("Evicting cache for {} with id {}!", hashPrefix, id);
-        redisTemplate.delete(makeKey(hashPrefix, email));
-        log.info("Evicting cache for {} with email {}!", hashPrefix, email);
+    public void delete(Long id, String email){
+        redisTemplate.delete(makeKey(USERS_CACHE_PREFIX, String.valueOf(id)));
+        log.info("Evicting cache for {} with id {}...", USERS_CACHE_PREFIX, id);
+        redisTemplate.delete(makeKey(USERS_CACHE_PREFIX, email));
+        log.info("Evicting cache for {} with email {}...", USERS_CACHE_PREFIX, email);
     }
 
-    private String makeKey(String hashPrefix, String userId) {
-        return hashPrefix + ":" + userId;
+    private String makeKey(String USERS_CACHE_PREFIX, String id) {
+        return new StringBuilder(USERS_CACHE_PREFIX).append(":").append(id).toString();
     }
 }

@@ -14,8 +14,8 @@ public interface CardService {
     void delete(Long id);
     CardDto findById(Long id);
     CardWithUserDto findByIdWithUser(Long id);
-    List<CardDto> findAllByIds(Collection<Long> ids);
-    List<CardWithUserDto> findAllByIdsWithUser(Collection<Long> ids);
+    List<CardDto> findByIds(Collection<Long> ids);
+    List<CardWithUserDto> findByIdsWithUser(Collection<Long> ids);
     List<CardDto> findAll();
     List<CardWithUserDto> findAllWithUser();
 }

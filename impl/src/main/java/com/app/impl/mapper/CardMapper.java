@@ -13,14 +13,11 @@ import com.app.impl.dto.cardDtos.CardUpdateDto;
 
 @Mapper(componentModel = "spring")
 public interface CardMapper {
-    @Mapping(target = "userId", source = "user.id")
     CardDto toDto(Card card);
 
     @Mapping(target = "userDto", source = "user")
-    @Mapping(target = "userId", source = "user.id")
     CardWithUserDto toDtoWithUser(Card card);
 
-    @Mapping(target = "user.id", source = "userId")
     Card toEntity(CardCreateDto cardDto);
 
     Card toUpdateEntity(CardUpdateDto cardDto);

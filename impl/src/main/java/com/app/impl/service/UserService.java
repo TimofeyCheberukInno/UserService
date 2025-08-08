@@ -13,6 +13,6 @@ public interface UserService {
     void delete(Long id);
     UserDto findById(Long id);
     UserDto findByEmail(String email);
-    List<UserDto> findAllByIds(Collection<Long> ids);
+    List<UserDto> findByIds(Collection<Long> ids);
     List<UserDto> findAll();
 }

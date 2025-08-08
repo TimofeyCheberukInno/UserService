@@ -1,6 +1,11 @@
 package com.app.impl.service.impl;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.Collection;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import com.app.impl.infrastructure.cache.UserCacheService;
@@ -22,7 +27,6 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final UserCacheService cacheService;
-    private static final String USERS_CACHE_PREFIX = "users";
     private static final String USER_NOT_FOUND_BY_ID_MSG = "User with id %d not found";
     private static final String USER_NOT_FOUND_BY_EMAIL_MSG = "User with email %s not found";
     private static final String LIST_OF_USERS_NOT_FOUND_BY_IDS_MSG = "Users not found for ids: ";
@@ -43,7 +47,8 @@ public class UserServiceImpl implements UserService {
     public UserDto create(UserCreateDto userCreateDto) {
         User user = userMapper.toEntity(userCreateDto);
         User createdUser = userRepository.save(user);
-        cacheService.save(USERS_CACHE_PREFIX, createdUser);
+
+        cacheService.save(createdUser);
         return userMapper.toDto(createdUser);
     }
 
@@ -55,7 +60,7 @@ public class UserServiceImpl implements UserService {
         int cntOfUpdatedUsers = userRepository.updateUser(user);
 
         User updatedUser = userRepository.findById(user.getId()).get();
-        cacheService.update(USERS_CACHE_PREFIX, updatedUser);
+        cacheService.update(updatedUser);
 
         return cntOfUpdatedUsers;
     }
@@ -67,13 +72,13 @@ public class UserServiceImpl implements UserService {
                 () -> new UserNotFoundException(USER_NOT_FOUND_BY_ID_MSG));
         userRepository.deleteById(id);
 
-        cacheService.delete(USERS_CACHE_PREFIX, user.getId(), user.getEmail());
+        cacheService.delete(user.getId(), user.getEmail());
     }
 
     @Override
     @Transactional(readOnly = true)
     public UserDto findById(Long id) {
-        Optional<User> cachedUser = cacheService.getById(USERS_CACHE_PREFIX, id);
+        Optional<User> cachedUser = cacheService.getById(id);
         if(cachedUser.isPresent()) {
             return userMapper.toDto(cachedUser.get());
         }
@@ -87,7 +92,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public UserDto findByEmail(String email) {
-        Optional<User> cachedUser = cacheService.getByEmail(USERS_CACHE_PREFIX, email);
+        Optional<User> cachedUser = cacheService.getByEmail(email);
         if(cachedUser.isPresent()) {
             return userMapper.toDto(cachedUser.get());
         }
@@ -100,8 +105,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserDto> findAllByIds(Collection<Long> ids) {
-        List<User> cachedUsers = cacheService.getByIds(USERS_CACHE_PREFIX, ids);
+    public List<UserDto> findByIds(Collection<Long> ids) {
+        List<User> cachedUsers = cacheService.getByIds(ids);
 
         List<Long> idsToTakeInDB = findNotCachedUsersIds(ids, cachedUsers);
 
