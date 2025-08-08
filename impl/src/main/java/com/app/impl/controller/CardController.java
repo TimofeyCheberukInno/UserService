@@ -3,7 +3,6 @@ package com.app.impl.controller;
 import java.util.List;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -79,7 +78,7 @@ public class CardController {
 
     @GetMapping("/by-ids")
     public ResponseEntity<List<CardDto>> getListOfCardsById(@RequestParam List<Long> ids){
-        List<CardDto> dtos = cardService.findAllByIds(ids);
+        List<CardDto> dtos = cardService.findByIds(ids);
         return new ResponseEntity<>(
                 dtos,
                 HttpStatus.OK
@@ -88,7 +87,7 @@ public class CardController {
 
     @GetMapping("/by-ids/with-user")
     public ResponseEntity<List<CardWithUserDto>> getListOfCardsWithUserById(@RequestParam List<Long> ids){
-        List<CardWithUserDto> dtos = cardService.findAllByIdsWithUser(ids);
+        List<CardWithUserDto> dtos = cardService.findByIdsWithUser(ids);
         return new ResponseEntity<>(
                 dtos,
                 HttpStatus.OK

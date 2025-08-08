@@ -24,6 +24,8 @@ import com.app.impl.mapper.CardMapper;
 import com.app.impl.repository.CardRepository;
 import com.app.impl.service.CardService;
 
+// FIXME: add string.format to comments
+
 @Service
 public class CardServiceImpl implements CardService {
     private final CardRepository cardRepository;
@@ -93,7 +95,6 @@ public class CardServiceImpl implements CardService {
         if(cachedCard.isPresent()) {
             return cachedCard.get();
         }
-
         Card card = cardRepository.findById(id).orElseThrow(
                 () -> new CardNotFoundException(String.format(CARD_NOT_FOUND_BY_ID_MSG, id))
         );

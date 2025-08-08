@@ -78,7 +78,7 @@ public class UserController {
 
     @GetMapping("/by-ids")
     public ResponseEntity<List<UserDto>> getListOfUsersByIds(@RequestParam List<Long> ids){
-        List<UserDto> dtos = userService.findAllByIds(ids);
+        List<UserDto> dtos = userService.findByIds(ids);
         return new ResponseEntity<>(
                 dtos,
                 HttpStatus.OK
