@@ -15,12 +15,13 @@ import com.app.impl.entity.Card;
 @Repository
 public interface CardRepository extends JpaRepository<Card,Long> {
     @Query("SELECT c FROM Card c JOIN FETCH c.user u WHERE c.id = :id")
-    Optional<Card> findByIdWithUser(Long id);
+    Optional<Card> findByIdWithUser(@Param("id") Long id);
 
+    //FIXME
     Optional<Card> findByEmail(@Param("userEmail") String email);
 
     @Query("SELECT c FROM Card c JOIN FETCH c.user u WHERE u.email = :userEmail")
-    Optional<Card> findByEmailWithUser(String userEmail);
+    Optional<Card> findByEmailWithUser(@Param("userEmail") String userEmail);
 
     @Modifying
     @Query("UPDATE Card с " +
@@ -29,10 +30,10 @@ public interface CardRepository extends JpaRepository<Card,Long> {
     int updateCard(@Param("card") Card card);
 
     @Query("SELECT c FROM Card c WHERE c.id IN :ids")
-    List<Card> findAllByIds(Collection<Long> ids);
+    List<Card> findAllByIds(@Param("ids") Collection<Long> ids);
 
     @Query("SELECT c FROM Card c JOIN FETCH c.user u WHERE c.id IN :ids")
-    List<Card> findAllByIdsWithUser(Collection<Long> ids);
+    List<Card> findAllByIdsWithUser(@Param("ids") Collection<Long> ids);
 
     @Query("SELECT c FROM Card c JOIN FETCH c.user u")
     List<Card> findAllWithUser();

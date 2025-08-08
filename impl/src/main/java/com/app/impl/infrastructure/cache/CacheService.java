@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class CacheService {
-    private CacheManager cacheManager;
+    private final CacheManager cacheManager;
 
     @Autowired
     public CacheService(CacheManager cacheManager) {
@@ -34,25 +34,29 @@ public class CacheService {
         }
     }
 
-    public void putCache(String cacheName, Object key, Object value){
+    public void putCache(String cacheName, Object id, Object email, Object value){
         Cache cache = cacheManager.getCache(cacheName);
         if(cache == null){
             log.warn("Cache {} was not found!", cacheName);
         }
         else{
-            log.info("Putting object with id {} into cache {}!", key, cacheName);
-            cache.put(key, value);
+            log.info("Putting object with id {} into cache {}!", id, cacheName);
+            cache.put(id, value);
+            log.info("Putting object with id {} into cache {}!", email, cacheName);
+            cache.put(email, value);
         }
     }
 
-    public void evictFromCache(String cacheName, Object key){
+    public void evictFromCache(String cacheName, Object id, Object email){
         Cache cache = cacheManager.getCache(cacheName);
         if(cache == null){
             log.warn("Cache {} was not found!", cacheName);
         }
         else{
-            log.info("Evicting object with id {} from cache {}!", key, cacheName);
-            cache.evict(key);
+            log.info("Evicting object with id {} from cache {}!", id, cacheName);
+            cache.evict(id);
+            log.info("Evicting object with id {} from cache {}!", email, cacheName);
+            cache.evict(email);
         }
     }
 }

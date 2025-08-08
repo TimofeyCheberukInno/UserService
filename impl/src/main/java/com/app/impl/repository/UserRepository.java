@@ -14,7 +14,7 @@ import com.app.impl.entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByEmail(@Param("userEmail") String email);
+    Optional<User> findByEmail(String email);
 
     @Modifying
     @Query("UPDATE User u " +
@@ -26,5 +26,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     int updateUser(@Param("updateUser") User user);
 
     @Query("SELECT u FROM User u WHERE u.id IN :ids")
-    List<User> findAllById(Collection<Long> ids);
+    List<User> findAllById(@Param("ids") Collection<Long> ids);
 }
