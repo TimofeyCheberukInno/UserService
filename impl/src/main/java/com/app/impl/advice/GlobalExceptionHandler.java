@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,24 +14,36 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import com.app.impl.exception.UserNotFoundException;
 import com.app.impl.exception.CardNotFoundException;
 
-// TODO: add ClassCastException
+import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+    private ResponseEntity<ErrorResponse> buildErrorResponse(
+            HttpStatus status,
+            String msg,
+            String description
+    ){
+        ErrorResponse errorResponse = new ErrorResponse(
+                status.value(),
+                msg,
+                description
+        );
+
+        return new ResponseEntity<>(
+                errorResponse,
+                status
+        );
+    }
+
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleUserNotFoundException(
             UserNotFoundException ex,
             WebRequest request
     ){
-        ErrorResponse errorResponse = new ErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
+        return buildErrorResponse(
+                HttpStatus.NOT_FOUND,
                 ex.getMessage(),
                 request.getDescription(false)
-        );
-
-        return new ResponseEntity<>(
-                errorResponse,
-                HttpStatus.NOT_FOUND
         );
     }
 
@@ -39,15 +52,10 @@ public class GlobalExceptionHandler {
             CardNotFoundException ex,
             WebRequest request
     ){
-        ErrorResponse errorResponse = new ErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
+        return buildErrorResponse(
+                HttpStatus.NOT_FOUND,
                 ex.getMessage(),
                 request.getDescription(false)
-        );
-
-        return new ResponseEntity<>(
-                errorResponse,
-                HttpStatus.NOT_FOUND
         );
     }
 
@@ -56,15 +64,10 @@ public class GlobalExceptionHandler {
             MethodArgumentTypeMismatchException ex,
             WebRequest request
     ){
-        ErrorResponse errorResponse = new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
+        return buildErrorResponse(
+                HttpStatus.BAD_REQUEST,
                 ex.getMessage(),
                 request.getDescription(false)
-        );
-
-        return new ResponseEntity<>(
-                errorResponse,
-                HttpStatus.BAD_REQUEST
         );
     }
 
@@ -73,15 +76,10 @@ public class GlobalExceptionHandler {
             org.hibernate.exception.ConstraintViolationException ex,
             WebRequest request
     ){
-        ErrorResponse errorResponse = new ErrorResponse(
-                HttpStatus.CONFLICT.value(),
+       return buildErrorResponse(
+                HttpStatus.CONFLICT,
                 ex.getMessage(),
                 request.getDescription(false)
-        );
-
-        return new ResponseEntity<>(
-                errorResponse,
-                HttpStatus.CONFLICT
         );
     }
 
@@ -90,15 +88,10 @@ public class GlobalExceptionHandler {
             DataIntegrityViolationException ex,
             WebRequest request
     ){
-        ErrorResponse errorResponse = new ErrorResponse(
-                HttpStatus.CONFLICT.value(),
+        return buildErrorResponse(
+                HttpStatus.CONFLICT,
                 ex.getMessage(),
                 request.getDescription(false)
-        );
-
-        return new ResponseEntity<>(
-                errorResponse,
-                HttpStatus.CONFLICT
         );
     }
 
@@ -107,15 +100,10 @@ public class GlobalExceptionHandler {
             EntityNotFoundException ex,
             WebRequest request
     ){
-        ErrorResponse errorResponse = new ErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
+        return buildErrorResponse(
+                HttpStatus.NOT_FOUND,
                 ex.getMessage(),
                 request.getDescription(false)
-        );
-
-        return new ResponseEntity<>(
-                errorResponse,
-                HttpStatus.NOT_FOUND
         );
     }
 
@@ -124,15 +112,15 @@ public class GlobalExceptionHandler {
             MethodArgumentNotValidException ex,
             WebRequest request
     ){
-        ErrorResponse errorResponse = new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                ex.getMessage(),
-                request.getDescription(false)
-        );
+        String errors = ex.getBindingResult()
+                .getFieldErrors().stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .collect(Collectors.joining(", "));
 
-        return new ResponseEntity<>(
-                errorResponse,
-                HttpStatus.BAD_REQUEST
+        return buildErrorResponse(
+                HttpStatus.BAD_REQUEST,
+                errors,
+                request.getDescription(false)
         );
     }
 
@@ -141,15 +129,27 @@ public class GlobalExceptionHandler {
             jakarta.validation.ConstraintViolationException ex,
             WebRequest request
     ){
-        ErrorResponse errorResponse = new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                ex.getMessage(),
+        String errors = ex.getConstraintViolations()
+                .stream()
+                .map(error -> error.getPropertyPath() + ": " + error.getMessage())
+                .collect(Collectors.joining(", "));
+
+        return buildErrorResponse(
+                HttpStatus.BAD_REQUEST,
+                errors,
                 request.getDescription(false)
         );
+    }
 
-        return new ResponseEntity<>(
-                errorResponse,
-                HttpStatus.BAD_REQUEST
+    @ExceptionHandler(ClassCastException.class)
+    public ResponseEntity<ErrorResponse> handleClassCastException(
+            ClassCastException ex,
+            WebRequest request
+    ){
+        return buildErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                ex.getMessage(),
+                request.getDescription(false)
         );
     }
 
@@ -158,15 +158,10 @@ public class GlobalExceptionHandler {
             Exception ex,
             WebRequest request
     ){
-        ErrorResponse errorResponse = new ErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+        return buildErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR,
                 ex.getMessage(),
                 request.getDescription(false)
-        );
-
-        return new ResponseEntity<>(
-                errorResponse,
-                HttpStatus.INTERNAL_SERVER_ERROR
         );
     }
 }
