@@ -104,7 +104,7 @@ public class CardCacheService {
         log.info("Evicting cache for {} with id {}!", CARDS_WITH_USER_CACHE_NAME, id);
     }
 
-
+    @SuppressWarnings("unchecked")
     private<T> List<T> getAndValidateObjectsFromCache(String hashName, Collection<Long> ids, Class<T> type){
         List<String> keys = ids.stream()
                 .map(id -> makeKey(hashName, id))

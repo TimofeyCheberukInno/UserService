@@ -128,7 +128,7 @@ public class CardServiceImpl implements CardService {
                 .filter(id -> !cachedCardsIds.contains(id))
                 .toList();
 
-        List<Card> cards = cardRepository.findAllById(notCachedIds);
+        List<Card> cards = cardRepository.findAllByIds(notCachedIds);
 
         if(cards.size() < notCachedIds.size()) {
             Set<Long> existingIds = cards.stream()

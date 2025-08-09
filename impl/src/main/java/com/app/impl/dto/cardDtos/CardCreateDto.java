@@ -18,7 +18,6 @@ import static com.app.impl.dto.cardDtos.CardConstraints.CARD_HOLDER_NAME_MAX_LEN
 import static com.app.impl.dto.cardDtos.CardConstraints.CARD_EXPIRATION_DATE_NULL_MSG;
 import static com.app.impl.dto.cardDtos.CardConstraints.CARD_EXPIRATION_DATE_INVALID_MSG;
 
-
 public record CardCreateDto(
         @NotNull(message = USER_ID_NULL_MSG)
         @Positive(message = USER_ID_INVALID_VALUE_MSG)

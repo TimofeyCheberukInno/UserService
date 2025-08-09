@@ -110,7 +110,7 @@ public class UserServiceImpl implements UserService {
 
         List<Long> idsToTakeInDB = findNotCachedUsersIds(ids, cachedUsers);
 
-        List<User> users = userRepository.findAllById(idsToTakeInDB);
+        List<User> users = userRepository.findAllByIds(idsToTakeInDB);
 
         users.addAll(cachedUsers);
         if(users.size() + cachedUsers.size() < ids.size()){

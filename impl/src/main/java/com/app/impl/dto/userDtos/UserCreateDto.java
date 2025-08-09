@@ -17,7 +17,6 @@ import static com.app.impl.dto.userDtos.UserConstraints.INVALID_BIRTH_DATE_MSG;
 import static com.app.impl.dto.userDtos.UserConstraints.BLANK_EMAIL_MSG;
 import static com.app.impl.dto.userDtos.UserConstraints.INVALID_EMAIL_MSG;
 
-
 public record UserCreateDto(
         @NotBlank(message = BLANK_NAME_MSG)
         @Size(max = MAX_NAME_LENGTH, message = MAX_NAME_LENGTH_MSG)

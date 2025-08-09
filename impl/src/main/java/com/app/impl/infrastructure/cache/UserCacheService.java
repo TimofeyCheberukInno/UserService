@@ -103,7 +103,7 @@ public class UserCacheService {
         log.info("Evicting cache for {} with email {}...", USERS_CACHE_PREFIX, email);
     }
 
-    private String makeKey(String USERS_CACHE_PREFIX, String id) {
-        return new StringBuilder(USERS_CACHE_PREFIX).append(":").append(id).toString();
+    private String makeKey(String hashPrefix, String id) {
+        return new StringBuilder(hashPrefix).append(":").append(id).toString();
     }
 }

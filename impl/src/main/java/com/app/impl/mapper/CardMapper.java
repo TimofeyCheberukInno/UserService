@@ -2,10 +2,10 @@ package com.app.impl.mapper;
 
 import java.util.List;
 
-import com.app.impl.dto.cardDtos.CardWithUserDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import com.app.impl.dto.cardDtos.CardWithUserDto;
 import com.app.impl.dto.cardDtos.CardDto;
 import com.app.impl.entity.Card;
 import com.app.impl.dto.cardDtos.CardCreateDto;
