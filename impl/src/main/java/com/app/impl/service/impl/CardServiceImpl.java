@@ -24,8 +24,6 @@ import com.app.impl.mapper.CardMapper;
 import com.app.impl.repository.CardRepository;
 import com.app.impl.service.CardService;
 
-// FIXME: add string.format to comments
-
 @Service
 public class CardServiceImpl implements CardService {
     private final CardRepository cardRepository;
@@ -52,7 +50,7 @@ public class CardServiceImpl implements CardService {
     @Override
     @Transactional
     public CardDto create(CardCreateDto cardCreateDto) {
-        User user = userRepository.findById(cardCreateDto.userId()).orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND_BY_ID_MSG));
+        User user = userRepository.findById(cardCreateDto.userId()).orElseThrow(() -> new UserNotFoundException(String.format(USER_NOT_FOUND_BY_ID_MSG, cardCreateDto.userId())));
         Card card = cardMapper.toEntity(cardCreateDto);
         card.setUser(user);
         Card createdCard = cardRepository.save(card);
@@ -66,7 +64,7 @@ public class CardServiceImpl implements CardService {
     @Override
     @Transactional
     public int update(CardUpdateDto cardUpdateDto) {
-        cardRepository.findById(cardUpdateDto.id()).orElseThrow(() -> new CardNotFoundException(CARD_NOT_FOUND_BY_ID_MSG));
+        cardRepository.findById(cardUpdateDto.id()).orElseThrow(() -> new CardNotFoundException(String.format(CARD_NOT_FOUND_BY_ID_MSG,  cardUpdateDto.id())));
         Card card = cardMapper.toUpdateEntity(cardUpdateDto);
 
         int cntOfUpdatedCards = cardRepository.updateCard(card);
@@ -81,7 +79,7 @@ public class CardServiceImpl implements CardService {
     @Transactional
     public void delete(Long id) {
         cardRepository.findById(id).orElseThrow(
-                () -> new CardNotFoundException(CARD_NOT_FOUND_BY_ID_MSG));
+                () -> new CardNotFoundException(String.format(CARD_NOT_FOUND_BY_ID_MSG, id)));
         cardRepository.deleteById(id);
 
         cacheService.delete(id);

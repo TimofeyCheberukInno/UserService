@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public int update(UserUpdateDto userUpdateDto) {
-        userRepository.findById(userUpdateDto.id()).orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND_BY_ID_MSG));
+        userRepository.findById(userUpdateDto.id()).orElseThrow(() -> new UserNotFoundException(String.format(USER_NOT_FOUND_BY_ID_MSG, userUpdateDto.id())));
         User user = userMapper.toUpdateEntity(userUpdateDto);
         int cntOfUpdatedUsers = userRepository.updateUser(user);
 
@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void delete(Long id) {
         User user = userRepository.findById(id).orElseThrow(
-                () -> new UserNotFoundException(USER_NOT_FOUND_BY_ID_MSG));
+                () -> new UserNotFoundException(String.format(USER_NOT_FOUND_BY_ID_MSG, id)));
         userRepository.deleteById(id);
 
         cacheService.delete(user.getId(), user.getEmail());
