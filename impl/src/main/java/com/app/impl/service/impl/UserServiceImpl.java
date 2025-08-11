@@ -97,6 +97,7 @@ public class UserServiceImpl implements UserService {
             return userMapper.toDto(cachedUser.get());
         }
 
+        // FIXME: not this exception
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new UserNotFoundException(String.format(USER_NOT_FOUND_BY_EMAIL_MSG, email))
         );
@@ -108,11 +109,12 @@ public class UserServiceImpl implements UserService {
     public List<UserDto> findByIds(Collection<Long> ids) {
         List<User> cachedUsers = cacheService.getByIds(ids);
 
-        List<Long> idsToTakeInDB = findNotCachedUsersIds(ids, cachedUsers);
+        List<Long> notCachedUsersIds = findNotCachedUsersIds(ids, cachedUsers);
 
-        List<User> users = userRepository.findAllByIds(idsToTakeInDB);
+        List<User> users = userRepository.findAllByIds(notCachedUsersIds);
 
         users.addAll(cachedUsers);
+
         if(users.size() + cachedUsers.size() < ids.size()){
             Set<Long> existingIds = users.stream()
                     .map(User::getId)

@@ -1,9 +1,10 @@
 package com.app.impl.service.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,9 +69,9 @@ public class CardServiceImpl implements CardService {
         Card card = cardMapper.toUpdateEntity(cardUpdateDto);
 
         int cntOfUpdatedCards = cardRepository.updateCard(card);
-        cacheService.updateCardWithoutUser(cardMapper.toDto(cardRepository.findById(cardUpdateDto.id()).get()));
-        // updates cache of card with user
-        findByIdWithUser(cardUpdateDto.id());
+        Card updatedCard = cardRepository.findById(cardUpdateDto.id()).get();
+        cacheService.updateCardWithoutUser(cardMapper.toDto(updatedCard));
+        cacheService.updateCardWithUser(cardMapper.toDtoWithUser(updatedCard));
 
         return cntOfUpdatedCards;
     }
@@ -128,11 +129,15 @@ public class CardServiceImpl implements CardService {
                 .filter(id -> !cachedCardsIds.contains(id))
                 .toList();
 
-        List<Card> cards = cardRepository.findAllByIds(notCachedIds);
+        List<CardDto> cards = new ArrayList<>(cardRepository.findAllByIds(notCachedIds).stream()
+                .map(cardMapper::toDto)
+                .toList());
 
-        if(cards.size() < notCachedIds.size()) {
+        cards.addAll(cachedCards);
+
+        if(cards.size() < ids.size()) {
             Set<Long> existingIds = cards.stream()
-                    .map(Card::getId)
+                    .map(CardDto::id)
                     .collect(Collectors.toSet());
 
             List<Long> notExistingIds = notCachedIds.stream()
@@ -142,7 +147,7 @@ public class CardServiceImpl implements CardService {
             throw new CardNotFoundException(LIST_OF_CARDS_NOT_FOUND_BY_IDS_MSG + notExistingIds);
         }
 
-        return cardMapper.toDtoList(cards);
+        return cards;
     }
 
     @Override
@@ -157,11 +162,15 @@ public class CardServiceImpl implements CardService {
                 .filter(id -> !cachedCardsIds.contains(id))
                 .toList();
 
-        List<Card> cards = cardRepository.findAllByIdsWithUser(ids);
+        List<CardWithUserDto> cards = new ArrayList<>(cardRepository.findAllByIdsWithUser(notCachedIds).stream()
+                .map(cardMapper::toDtoWithUser)
+                .toList());
 
-        if(cards.size() < notCachedIds.size()) {
+        cards.addAll(cachedCards);
+
+        if(cards.size() < ids.size()) {
             Set<Long> existingIds = cards.stream()
-                    .map(Card::getId)
+                    .map(CardWithUserDto::id)
                     .collect(Collectors.toSet());
 
             List<Long> notExistingIds = notCachedIds.stream()
@@ -171,7 +180,7 @@ public class CardServiceImpl implements CardService {
             throw new CardNotFoundException(LIST_OF_CARDS_NOT_FOUND_BY_IDS_MSG + notExistingIds);
         }
 
-        return cardMapper.toDtoWithUserList(cards);
+        return cards;
     }
 
     @Override

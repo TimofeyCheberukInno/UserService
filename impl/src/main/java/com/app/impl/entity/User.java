@@ -24,7 +24,7 @@ import lombok.Builder;
 @Builder
 @NamedQuery(
         name = "User.findByEmail",
-        query = "SELECT u FROM User u WHERE u.email = :userEmail"
+        query = "SELECT u FROM User u WHERE u.email = :email"
 )
 public class User {
     @Id

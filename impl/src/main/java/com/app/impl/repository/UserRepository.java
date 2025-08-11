@@ -14,13 +14,12 @@ import com.app.impl.entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByEmail(String email);
+    Optional<User> findByEmail(@Param("email") String email);
 
     @Modifying
     @Query("UPDATE User u " +
             "SET u.name = :#{#updateUser.name}, " +
             "u.surname = :#{#updateUser.surname}, " +
-            "u.birthDate = :#{#updateUser.birthDate}, " +
             "u.email = :#{#updateUser.email} " +
             "WHERE u.id = :#{#updateUser.id} ")
     int updateUser(@Param("updateUser") User user);

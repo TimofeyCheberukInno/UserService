@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,8 +29,6 @@ import lombok.Builder;
 @Getter
 @Setter
 @Builder
-@NamedQuery(name = "Card.findByEmail",
-        query = "SELECT c FROM Card c WHERE c.user.email = :userEmail")
 public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
