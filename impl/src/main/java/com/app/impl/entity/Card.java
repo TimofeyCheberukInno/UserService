@@ -1,6 +1,7 @@
 package com.app.impl.entity;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -17,7 +18,7 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
 import lombok.Getter;
-import lombok.Builder;
+import lombok.ToString;
 
 @Entity
 @Table(name = "card_info",
@@ -28,7 +29,7 @@ import lombok.Builder;
 @AllArgsConstructor
 @Getter
 @Setter
-@Builder
+@ToString
 public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,4 +50,26 @@ public class Card {
 
     @Column(name = "expiration_date", nullable = false)
     LocalDate expirationDate;
+
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        Card card = (Card) o;
+
+        return this.userId.equals(card.userId)
+                && this.cardNumber.equals(card.cardNumber)
+                && this.cardHolderName.equals(card.cardHolderName)
+                && this.expirationDate.equals(card.expirationDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                userId,
+                cardNumber,
+                cardHolderName,
+                expirationDate
+        );
+    }
 }

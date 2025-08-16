@@ -45,6 +45,8 @@ import static com.app.impl.service.support.UserServiceTestConstants.getListOfCac
 import static com.app.impl.service.support.UserServiceTestConstants.getListOfNotCachedUsers;
 import static com.app.impl.service.support.UserServiceTestConstants.getListOfNotCachedUserIds;
 
+// FIXME: extract methods to create new entity or dto
+// FIXME: .usingRecursiveComparison()
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
     @Mock
@@ -61,7 +63,7 @@ class UserServiceTest {
     @DisplayName("Tests for create(UserCreateDto dto)")
     class createUserTests {
         @Test
-        @DisplayName("returns userDto if user was created")
+        @DisplayName("returns userDto if user was successfully created")
         void shouldSaveAndReturnUser(){
             Mockito.when(userMapper.toEntity(USER_CREATE_DTO)).thenReturn(MAPPED_USER_ENTITY);
             Mockito.when(userMapper.toDto(CREATED_USER_ENTITY)).thenReturn(CREATED_USER_DTO);

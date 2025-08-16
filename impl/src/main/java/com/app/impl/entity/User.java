@@ -1,6 +1,7 @@
 package com.app.impl.entity;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
 import lombok.Getter;
-import lombok.Builder;
+import lombok.ToString;
 
 @Entity
 @Table(name = "users")
@@ -21,7 +22,7 @@ import lombok.Builder;
 @AllArgsConstructor
 @Getter
 @Setter
-@Builder
+@ToString
 @NamedQuery(
         name = "User.findByEmail",
         query = "SELECT u FROM User u WHERE u.email = :email"
@@ -42,7 +43,26 @@ public class User {
 
     @Column(nullable = false, unique = true)
     private String email;
+
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+
+        return this.name.equals(user.name)
+                && this.surname.equals(user.surname)
+                && this.birthDate.equals(user.birthDate)
+                && this.email.equals(user.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                name,
+                surname,
+                birthDate,
+                email
+        );
+    }
 }
-
-
-
