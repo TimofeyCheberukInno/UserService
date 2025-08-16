@@ -46,7 +46,6 @@ public class UserCacheService {
 
     public Optional<User> getById(Long id){
         Object object = redisTemplate.opsForValue().get(makeKey(USERS_CACHE_PREFIX, String.valueOf(id)));
-        log.info("From cache raw class: {}", object != null ? object.getClass() : null);
         if(object instanceof User){
             log.info("Cache hit for {} with id {}!", USERS_CACHE_PREFIX, id);
             return Optional.of((User) object);
@@ -103,6 +102,7 @@ public class UserCacheService {
         log.info("Evicting cache for {} with email {}...", USERS_CACHE_PREFIX, email);
     }
 
+    // FIXME : extract this method in support class
     private String makeKey(String hashPrefix, String id) {
         return new StringBuilder(hashPrefix).append(":").append(id).toString();
     }

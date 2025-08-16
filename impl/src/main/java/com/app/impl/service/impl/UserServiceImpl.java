@@ -4,15 +4,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Collection;
 import java.util.Set;
-import java.util.HashSet;
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-import com.app.impl.infrastructure.cache.UserCacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.app.impl.infrastructure.cache.UserCacheService;
 import com.app.impl.dto.userDtos.UserCreateDto;
 import com.app.impl.dto.userDtos.UserDto;
 import com.app.impl.dto.userDtos.UserUpdateDto;
@@ -21,6 +19,8 @@ import com.app.impl.mapper.UserMapper;
 import com.app.impl.repository.UserRepository;
 import com.app.impl.service.UserService;
 import com.app.impl.exception.UserNotFoundException;
+
+import static com.app.impl.service.support.UserServiceSupport.findNotCachedUsersIds;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -97,7 +97,6 @@ public class UserServiceImpl implements UserService {
             return userMapper.toDto(cachedUser.get());
         }
 
-        // FIXME: not this exception
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new UserNotFoundException(String.format(USER_NOT_FOUND_BY_EMAIL_MSG, email))
         );
@@ -115,7 +114,7 @@ public class UserServiceImpl implements UserService {
 
         users.addAll(cachedUsers);
 
-        if(users.size() + cachedUsers.size() < ids.size()){
+        if(users.size() < ids.size()){
             Set<Long> existingIds = users.stream()
                     .map(User::getId)
                     .collect(Collectors.toSet());
@@ -133,22 +132,5 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public List<UserDto> findAll() {
         return userMapper.toDtoList(userRepository.findAll());
-    }
-
-    private List<Long> findNotCachedUsersIds(Collection<Long> ids, List<User> cachedUsers) {
-        Set<Long> cachedUsersIds = new HashSet<>(cachedUsers.size());
-        for (User user : cachedUsers) {
-            cachedUsersIds.add(user.getId());
-        }
-
-        List<Long> idsToTakeInDB = new ArrayList<>();
-        if(cachedUsers.size() < ids.size()) {
-            for(Long id : ids) {
-                if(!cachedUsersIds.contains(id)) {
-                    idsToTakeInDB.add(id);
-                }
-            }
-        }
-        return idsToTakeInDB;
     }
 }

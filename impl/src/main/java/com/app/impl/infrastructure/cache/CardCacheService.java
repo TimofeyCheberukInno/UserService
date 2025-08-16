@@ -129,6 +129,7 @@ public class CardCacheService {
                 .toList();
     }
 
+    // FIXME : extract this method in support class
     private String makeKey(String hashPrefix, Long id) {
         return new StringBuilder(hashPrefix).append(":").append(id).toString();
     }
