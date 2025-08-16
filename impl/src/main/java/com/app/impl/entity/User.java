@@ -50,10 +50,10 @@ public class User {
         if(o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
 
-        return this.name.equals(user.name)
-                && this.surname.equals(user.surname)
-                && this.birthDate.equals(user.birthDate)
-                && this.email.equals(user.email);
+        return Objects.equals(this.name, user.name)
+                && Objects.equals(this.surname, user.surname)
+                && Objects.equals(this.birthDate, user.birthDate)
+                && Objects.equals(this.email, user.email);
     }
 
     @Override

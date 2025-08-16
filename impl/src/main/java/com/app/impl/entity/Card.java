@@ -57,10 +57,10 @@ public class Card {
         if(o == null || getClass() != o.getClass()) return false;
         Card card = (Card) o;
 
-        return this.userId.equals(card.userId)
-                && this.cardNumber.equals(card.cardNumber)
-                && this.cardHolderName.equals(card.cardHolderName)
-                && this.expirationDate.equals(card.expirationDate);
+        return Objects.equals(this.userId, card.userId)
+                && Objects.equals(this.cardNumber, card.cardNumber)
+                && Objects.equals(this.cardHolderName, card.cardHolderName)
+                && Objects.equals(this.expirationDate, card.expirationDate);
     }
 
     @Override
