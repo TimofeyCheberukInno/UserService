@@ -2,7 +2,6 @@ package com.app.impl.infrastructure.cache;
 
 import java.time.Duration;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.List;
 
@@ -13,6 +12,9 @@ import org.springframework.stereotype.Service;
 
 import com.app.impl.dto.cardDtos.CardDto;
 import com.app.impl.dto.cardDtos.CardWithUserDto;
+
+import static com.app.impl.infrastructure.cache.support.CardCacheServiceSupport.makeKey;
+import static com.app.impl.infrastructure.cache.support.CardCacheServiceSupport.getAndValidateObjectsFromCache;
 
 @Service
 @Slf4j
@@ -76,7 +78,7 @@ public class CardCacheService {
     }
 
     public List<CardDto> getByIdsWithoutUser(Collection<Long> ids){
-        List<CardDto> cachedCards = getAndValidateObjectsFromCache(CARDS_CACHE_NAME, ids, CardDto.class);
+        List<CardDto> cachedCards = getAndValidateObjectsFromCache(redisTemplate, CARDS_CACHE_NAME, ids, CardDto.class);
 
         List<Long> cachedCardsIds = cachedCards.stream()
                 .map(CardDto::id)
@@ -87,7 +89,7 @@ public class CardCacheService {
     }
 
     public List<CardWithUserDto> getByIdsWithUser(Collection<Long> ids){
-        List<CardWithUserDto> cachedCards = getAndValidateObjectsFromCache(CARDS_WITH_USER_CACHE_NAME, ids, CardWithUserDto.class);
+        List<CardWithUserDto> cachedCards = getAndValidateObjectsFromCache(redisTemplate, CARDS_WITH_USER_CACHE_NAME, ids, CardWithUserDto.class);
 
         List<Long> cachedCardsIds = cachedCards.stream()
                 .map(CardWithUserDto::id)
@@ -102,35 +104,5 @@ public class CardCacheService {
         log.info("Evicting cache for {} with id {}!", CARDS_CACHE_NAME, id);
         redisTemplate.delete(makeKey(CARDS_WITH_USER_CACHE_NAME, id));
         log.info("Evicting cache for {} with id {}!", CARDS_WITH_USER_CACHE_NAME, id);
-    }
-
-    @SuppressWarnings("unchecked")
-    private<T> List<T> getAndValidateObjectsFromCache(String hashName, Collection<Long> ids, Class<T> type){
-        List<String> keys = ids.stream()
-                .map(id -> makeKey(hashName, id))
-                .toList();
-
-        List<Object> cardsWithNulls =
-                Objects.requireNonNull(redisTemplate.opsForValue().multiGet(keys));
-
-        List<Object> cards = cardsWithNulls.stream()
-                .filter(Objects::nonNull)
-                .toList();
-
-        boolean allCorrectType = cards.stream()
-                .allMatch(type::isInstance);
-
-        if(!allCorrectType){
-            throw new ClassCastException("Object is not " + type.getName() + " type!");
-        }
-
-        return cards.stream()
-                .map(object -> (T) object)
-                .toList();
-    }
-
-    // FIXME : extract this method in support class
-    private String makeKey(String hashPrefix, Long id) {
-        return new StringBuilder(hashPrefix).append(":").append(id).toString();
     }
 }
