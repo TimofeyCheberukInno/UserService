@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import com.app.impl.entity.User;
 
+import static com.app.impl.infrastructure.cache.support.UserCacheServiceSupport.makeKey;
+
 @Service
 @Slf4j
 public class UserCacheService {
@@ -25,7 +27,7 @@ public class UserCacheService {
         this.redisTemplate = redisTemplate;
     }
 
-    public void save(User user){
+    public void save(User user) {
         redisTemplate.opsForValue().set(
                 makeKey(USERS_CACHE_PREFIX, String.valueOf(user.getId())),
                 user,
@@ -39,14 +41,14 @@ public class UserCacheService {
         log.info("Putting cache for {} with id {}...", USERS_CACHE_PREFIX, user.getEmail());
     }
 
-    public void update(User user){
+    public void update(User user) {
         save(user);
         log.info("Updating cache for {} with id {}...", USERS_CACHE_PREFIX, user.getId());
     }
 
-    public Optional<User> getById(Long id){
+    public Optional<User> getById(Long id) {
         Object object = redisTemplate.opsForValue().get(makeKey(USERS_CACHE_PREFIX, String.valueOf(id)));
-        if(object instanceof User){
+        if (object instanceof User) {
             log.info("Cache hit for {} with id {}!", USERS_CACHE_PREFIX, id);
             return Optional.of((User) object);
         }
@@ -54,9 +56,9 @@ public class UserCacheService {
         return Optional.empty();
     }
 
-    public Optional<User> getByEmail(String email){
+    public Optional<User> getByEmail(String email) {
         Object object = redisTemplate.opsForValue().get(makeKey(USERS_CACHE_PREFIX, email));
-        if(object instanceof User){
+        if (object instanceof User) {
             log.info("Cache hit for {} with email {}!", USERS_CACHE_PREFIX, email);
             return Optional.of((User) object);
         }
@@ -64,7 +66,7 @@ public class UserCacheService {
         return Optional.empty();
     }
 
-    public List<User> getByIds(Collection<Long> ids){
+    public List<User> getByIds(Collection<Long> ids) {
         List<String> keys = ids.stream()
                 .map(id -> makeKey(USERS_CACHE_PREFIX, String.valueOf(id)))
                 .toList();
@@ -79,31 +81,26 @@ public class UserCacheService {
         boolean allCorrectType = users.stream()
                 .allMatch(object -> object instanceof User);
 
-        if(!allCorrectType){
+        if (!allCorrectType) {
             throw new ClassCastException("Object is not User type!");
         }
 
         List<User> cachedUsers = users.stream()
-                        .map(object -> (User) object)
-                        .toList();
+                .map(object -> (User) object)
+                .toList();
 
         List<Long> cachedUsersIds = cachedUsers.stream()
-                        .map(User::getId)
-                        .toList();
+                .map(User::getId)
+                .toList();
         log.info("Cache hit for {} with ids {}!", USERS_CACHE_PREFIX, cachedUsersIds);
 
         return cachedUsers;
     }
 
-    public void delete(Long id, String email){
+    public void delete(Long id, String email) {
         redisTemplate.delete(makeKey(USERS_CACHE_PREFIX, String.valueOf(id)));
         log.info("Evicting cache for {} with id {}...", USERS_CACHE_PREFIX, id);
         redisTemplate.delete(makeKey(USERS_CACHE_PREFIX, email));
         log.info("Evicting cache for {} with email {}...", USERS_CACHE_PREFIX, email);
-    }
-
-    // FIXME : extract this method in support class
-    private String makeKey(String hashPrefix, String id) {
-        return new StringBuilder(hashPrefix).append(":").append(id).toString();
     }
 }
