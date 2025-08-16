@@ -46,7 +46,6 @@ import static com.app.impl.service.support.UserServiceTestConstants.getListOfNot
 import static com.app.impl.service.support.UserServiceTestConstants.getListOfNotCachedUserIds;
 
 // FIXME: extract methods to create new entity or dto
-// FIXME: .usingRecursiveComparison()
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
     @Mock
@@ -150,7 +149,7 @@ class UserServiceTest {
 
     @Nested
     @DisplayName("Tests for findById(Long id) and findByEmail(String email)")
-    class findUserBy {
+    class findUserByTests {
         @Test
         @DisplayName("returns user by id from cache")
         void shouldReturnUserByIdFromCache(){
@@ -251,8 +250,8 @@ class UserServiceTest {
     }
 
     @Nested
-    @DisplayName("Tests for findByIds(Collection<Long> ids) and findAll()")
-    class findListOfUsersBy {
+    @DisplayName("Tests for findByIds(Collection<Long> ids)")
+    class findListOfUsersByTests {
         @Test
         @DisplayName("returns list of users by ids from cache")
         void shouldReturnListOfUsersByIdsFromCache(){
@@ -290,7 +289,7 @@ class UserServiceTest {
         }
 
         @Test
-        @DisplayName("return list of users by ids partially from cache and DB")
+        @DisplayName("return list of users by ids partially from cache and partially from DB")
         void shouldReturnListOfUsersByIdsFromCacheAndDB(){
             Mockito.when(userCacheService.getByIds(getInitialListOfIds())).thenReturn(getListOfCachedUsers());
             Mockito.when(userRepository.findAllByIds(getListOfNotCachedUserIds())).thenReturn(getListOfNotCachedUsers());
@@ -321,4 +320,6 @@ class UserServiceTest {
             Mockito.verify(userMapper, Mockito.never()).toDtoList(Mockito.any());
         }
     }
+
+    // TODO: tests for findAll()
 }
