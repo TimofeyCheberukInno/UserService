@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 
 // TODO: Логирование
+// FIXME: style files
 
 @SpringBootApplication
 @EnableCaching
