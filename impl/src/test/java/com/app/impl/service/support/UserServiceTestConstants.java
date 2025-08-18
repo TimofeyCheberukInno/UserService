@@ -22,57 +22,63 @@ public class UserServiceTestConstants {
 
     public static final String USER_EMAIL_VALUE = USER_EMAIL;
 
-    public static final UserCreateDto USER_CREATE_DTO =
-            new UserCreateDto(
+    public static UserCreateDto getUserCreateDto() {
+        return new UserCreateDto(
                 USER_NAME,
                 USER_SURNAME,
                 USER_BIRTHDATE,
                 USER_EMAIL
         );
+    }
 
-    public static final User MAPPED_USER_ENTITY =
-            new User(
+    public static User getMapperUserEntity() {
+        return new User(
                 null,
                 USER_NAME,
                 USER_SURNAME,
                 USER_BIRTHDATE,
                 USER_EMAIL
-            );
+        );
+    }
 
-    public static final UserDto CREATED_USER_DTO =
-            new UserDto(
+    public static UserDto getCreatedUserDto() {
+        return new UserDto(
                 USER_ID,
                 USER_NAME,
                 USER_SURNAME,
                 USER_BIRTHDATE,
                 USER_EMAIL
         );
+    }
 
-    public static final User CREATED_USER_ENTITY =
-            new User(
+    public static User getCreatedUserEntity() {
+        return new User(
                 USER_ID,
                 USER_NAME,
                 USER_SURNAME,
                 USER_BIRTHDATE,
                 USER_EMAIL
         );
+    }
 
-    public static final UserUpdateDto USER_UPDATE_DTO =
-        new UserUpdateDto(
+    public static UserUpdateDto getUserUpdateDto() {
+        return new UserUpdateDto(
                 USER_ID,
                 USER_NAME,
                 USER_SURNAME,
                 USER_EMAIL
         );
+    }
 
-    public static final User USER_UPDATE_ENTITY =
-            new User(
-                    USER_ID,
-                    USER_NAME,
-                    USER_SURNAME,
-                    null,
-                    USER_EMAIL
-            );
+    public static User getUserUpdateEntity() {
+        return new User(
+                USER_ID,
+                USER_NAME,
+                USER_SURNAME,
+                null,
+                USER_EMAIL
+        );
+    }
 
     public static final int AMOUNT_OF_UPDATED_USERS = 1;
 
