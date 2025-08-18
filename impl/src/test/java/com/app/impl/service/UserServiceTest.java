@@ -29,12 +29,12 @@ import static com.app.impl.service.support.UserServiceTestConstants.AMOUNT_OF_UP
 import static com.app.impl.service.support.UserServiceTestConstants.USER_NOT_FOUND_BY_ID_MSG;
 import static com.app.impl.service.support.UserServiceTestConstants.USER_NOT_FOUND_BY_EMAIL_MSG;
 import static com.app.impl.service.support.UserServiceTestConstants.LIST_OF_USERS_NOT_FOUND_BY_IDS_MSG;
-import static com.app.impl.service.support.UserServiceTestConstants.USER_CREATE_DTO;
-import static com.app.impl.service.support.UserServiceTestConstants.MAPPED_USER_ENTITY;
-import static com.app.impl.service.support.UserServiceTestConstants.CREATED_USER_DTO;
-import static com.app.impl.service.support.UserServiceTestConstants.CREATED_USER_ENTITY;
-import static com.app.impl.service.support.UserServiceTestConstants.USER_UPDATE_DTO;
-import static com.app.impl.service.support.UserServiceTestConstants.USER_UPDATE_ENTITY;
+import static com.app.impl.service.support.UserServiceTestConstants.getUserCreateDto;
+import static com.app.impl.service.support.UserServiceTestConstants.getMapperUserEntity;
+import static com.app.impl.service.support.UserServiceTestConstants.getCreatedUserDto;
+import static com.app.impl.service.support.UserServiceTestConstants.getCreatedUserEntity;
+import static com.app.impl.service.support.UserServiceTestConstants.getUserUpdateDto;
+import static com.app.impl.service.support.UserServiceTestConstants.getUserUpdateEntity;
 import static com.app.impl.service.support.UserServiceTestConstants.getInitialListOfIds;
 import static com.app.impl.service.support.UserServiceTestConstants.getFullListOfIds;
 import static com.app.impl.service.support.UserServiceTestConstants.getEmptyListOfIds;
@@ -45,7 +45,6 @@ import static com.app.impl.service.support.UserServiceTestConstants.getListOfCac
 import static com.app.impl.service.support.UserServiceTestConstants.getListOfNotCachedUsers;
 import static com.app.impl.service.support.UserServiceTestConstants.getListOfNotCachedUserIds;
 
-// FIXME: extract methods to create new entity or dto
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
     @Mock
@@ -64,20 +63,20 @@ class UserServiceTest {
         @Test
         @DisplayName("returns userDto if user was successfully created")
         void shouldSaveAndReturnUser(){
-            Mockito.when(userMapper.toEntity(USER_CREATE_DTO)).thenReturn(MAPPED_USER_ENTITY);
-            Mockito.when(userMapper.toDto(CREATED_USER_ENTITY)).thenReturn(CREATED_USER_DTO);
-            Mockito.when(userRepository.save(MAPPED_USER_ENTITY)).thenReturn(CREATED_USER_ENTITY);
+            Mockito.when(userMapper.toEntity(getUserCreateDto())).thenReturn(getMapperUserEntity());
+            Mockito.when(userMapper.toDto(getCreatedUserEntity())).thenReturn(getCreatedUserDto());
+            Mockito.when(userRepository.save(getMapperUserEntity())).thenReturn(getCreatedUserEntity());
 
-            UserDto expectedValue = CREATED_USER_DTO;
+            UserDto expectedValue = getCreatedUserDto();
 
-            UserDto actualValue = userService.create(USER_CREATE_DTO);
+            UserDto actualValue = userService.create(getUserCreateDto());
 
             assertThat(actualValue).isEqualTo(expectedValue);
 
-            Mockito.verify(userRepository, Mockito.times(1)).save(MAPPED_USER_ENTITY);
-            Mockito.verify(userMapper, Mockito.times(1)).toEntity(USER_CREATE_DTO);
-            Mockito.verify(userMapper, Mockito.times(1)).toDto(CREATED_USER_ENTITY);
-            Mockito.verify(userCacheService, Mockito.times(1)).save(CREATED_USER_ENTITY);
+            Mockito.verify(userRepository, Mockito.times(1)).save(getMapperUserEntity());
+            Mockito.verify(userMapper, Mockito.times(1)).toEntity(getUserCreateDto());
+            Mockito.verify(userMapper, Mockito.times(1)).toDto(getCreatedUserEntity());
+            Mockito.verify(userCacheService, Mockito.times(1)).save(getCreatedUserEntity());
         }
     }
 
@@ -87,20 +86,20 @@ class UserServiceTest {
         @Test
         @DisplayName("returns amount of updated entities")
         void shouldSaveAndReturnAmountUpdatedEntities(){
-            Mockito.when(userRepository.findById(USER_ID_VALUE)).thenReturn(Optional.of(CREATED_USER_ENTITY));
-            Mockito.when(userMapper.toUpdateEntity(USER_UPDATE_DTO)).thenReturn(USER_UPDATE_ENTITY);
-            Mockito.when(userRepository.updateUser(USER_UPDATE_ENTITY)).thenReturn(AMOUNT_OF_UPDATED_USERS);
+            Mockito.when(userRepository.findById(USER_ID_VALUE)).thenReturn(Optional.of(getCreatedUserEntity()));
+            Mockito.when(userMapper.toUpdateEntity(getUserUpdateDto())).thenReturn(getUserUpdateEntity());
+            Mockito.when(userRepository.updateUser(getUserUpdateEntity())).thenReturn(AMOUNT_OF_UPDATED_USERS);
 
             int expectedValue = AMOUNT_OF_UPDATED_USERS;
 
-            int actualValue = userService.update(USER_UPDATE_DTO);
+            int actualValue = userService.update(getUserUpdateDto());
 
             assertThat(actualValue).isEqualTo(expectedValue);
 
             Mockito.verify(userRepository, Mockito.times(2)).findById(USER_ID_VALUE);
-            Mockito.verify(userRepository, Mockito.times(1)).updateUser(USER_UPDATE_ENTITY);
-            Mockito.verify(userMapper, Mockito.times(1)).toUpdateEntity(USER_UPDATE_DTO);
-            Mockito.verify(userCacheService, Mockito.times(1)).update(CREATED_USER_ENTITY);
+            Mockito.verify(userRepository, Mockito.times(1)).updateUser(getUserUpdateEntity());
+            Mockito.verify(userMapper, Mockito.times(1)).toUpdateEntity(getUserUpdateDto());
+            Mockito.verify(userCacheService, Mockito.times(1)).update(getCreatedUserEntity());
         }
 
         @Test
@@ -108,7 +107,7 @@ class UserServiceTest {
         void shouldThrowUserNotFoundException(){
             Mockito.when(userRepository.findById(USER_ID_VALUE)).thenReturn(Optional.empty());
 
-            assertThatExceptionOfType(UserNotFoundException.class).isThrownBy(() -> { userService.update(USER_UPDATE_DTO); })
+            assertThatExceptionOfType(UserNotFoundException.class).isThrownBy(() -> { userService.update(getUserUpdateDto()); })
                     .withMessage(USER_NOT_FOUND_BY_ID_MSG, USER_ID_VALUE);
 
             Mockito.verify(userRepository, Mockito.times(1)).findById(USER_ID_VALUE);
@@ -124,7 +123,7 @@ class UserServiceTest {
         @Test
         @DisplayName("successfully deletes user")
         void shouldDeleteUser(){
-            Mockito.when(userRepository.findById(USER_ID_VALUE)).thenReturn(Optional.of(CREATED_USER_ENTITY));
+            Mockito.when(userRepository.findById(USER_ID_VALUE)).thenReturn(Optional.of(getCreatedUserEntity()));
 
             userService.delete(USER_ID_VALUE);
 
@@ -153,17 +152,17 @@ class UserServiceTest {
         @Test
         @DisplayName("returns user by id from cache")
         void shouldReturnUserByIdFromCache(){
-            Mockito.when(userCacheService.getById(USER_ID_VALUE)).thenReturn(Optional.of(CREATED_USER_ENTITY));
-            Mockito.when(userMapper.toDto(CREATED_USER_ENTITY)).thenReturn(CREATED_USER_DTO);
+            Mockito.when(userCacheService.getById(USER_ID_VALUE)).thenReturn(Optional.of(getCreatedUserEntity()));
+            Mockito.when(userMapper.toDto(getCreatedUserEntity())).thenReturn(getCreatedUserDto());
 
-            UserDto expectedUserDto = CREATED_USER_DTO;
+            UserDto expectedUserDto = getCreatedUserDto();
 
             UserDto actualUserDto = userService.findById(USER_ID_VALUE);
 
             assertThat(actualUserDto).isEqualTo(expectedUserDto);
 
             Mockito.verify(userCacheService, Mockito.times(1)).getById(USER_ID_VALUE);
-            Mockito.verify(userMapper, Mockito.times(1)).toDto(CREATED_USER_ENTITY);
+            Mockito.verify(userMapper, Mockito.times(1)).toDto(getCreatedUserEntity());
             Mockito.verify(userRepository, Mockito.never()).findById(Mockito.any());
         }
 
@@ -171,17 +170,17 @@ class UserServiceTest {
         @DisplayName("returns user by id from db")
         void shouldReturnUserByIdFromDB(){
             Mockito.when(userCacheService.getById(USER_ID_VALUE)).thenReturn(Optional.empty());
-            Mockito.when(userMapper.toDto(CREATED_USER_ENTITY)).thenReturn(CREATED_USER_DTO);
-            Mockito.when(userRepository.findById(USER_ID_VALUE)).thenReturn(Optional.of(CREATED_USER_ENTITY));
+            Mockito.when(userMapper.toDto(getCreatedUserEntity())).thenReturn(getCreatedUserDto());
+            Mockito.when(userRepository.findById(USER_ID_VALUE)).thenReturn(Optional.of(getCreatedUserEntity()));
 
-            UserDto expectedUserDto = CREATED_USER_DTO;
+            UserDto expectedUserDto = getCreatedUserDto();
 
             UserDto actualUserDto = userService.findById(USER_ID_VALUE);
 
             assertThat(actualUserDto).isEqualTo(expectedUserDto);
 
             Mockito.verify(userCacheService, Mockito.times(1)).getById(USER_ID_VALUE);
-            Mockito.verify(userMapper, Mockito.times(1)).toDto(CREATED_USER_ENTITY);
+            Mockito.verify(userMapper, Mockito.times(1)).toDto(getCreatedUserEntity());
             Mockito.verify(userRepository, Mockito.times(1)).findById(USER_ID_VALUE);
         }
 
@@ -202,17 +201,17 @@ class UserServiceTest {
         @Test
         @DisplayName("returns user by email from cache")
         void shouldReturnUserByEmailFromCache(){
-            Mockito.when(userCacheService.getByEmail(USER_EMAIL_VALUE)).thenReturn(Optional.of(CREATED_USER_ENTITY));
-            Mockito.when(userMapper.toDto(CREATED_USER_ENTITY)).thenReturn(CREATED_USER_DTO);
+            Mockito.when(userCacheService.getByEmail(USER_EMAIL_VALUE)).thenReturn(Optional.of(getCreatedUserEntity()));
+            Mockito.when(userMapper.toDto(getCreatedUserEntity())).thenReturn(getCreatedUserDto());
 
-            UserDto expectedUserDto = CREATED_USER_DTO;
+            UserDto expectedUserDto = getCreatedUserDto();
 
             UserDto actualUserDto = userService.findByEmail(USER_EMAIL_VALUE);
 
             assertThat(actualUserDto).isEqualTo(expectedUserDto);
 
             Mockito.verify(userCacheService, Mockito.times(1)).getByEmail(USER_EMAIL_VALUE);
-            Mockito.verify(userMapper, Mockito.times(1)).toDto(CREATED_USER_ENTITY);
+            Mockito.verify(userMapper, Mockito.times(1)).toDto(getCreatedUserEntity());
             Mockito.verify(userRepository, Mockito.never()).findByEmail(Mockito.any());
         }
 
@@ -220,17 +219,17 @@ class UserServiceTest {
         @DisplayName("returns user by email from db")
         void shouldReturnUserByEmailFromDB(){
             Mockito.when(userCacheService.getByEmail(USER_EMAIL_VALUE)).thenReturn(Optional.empty());
-            Mockito.when(userMapper.toDto(CREATED_USER_ENTITY)).thenReturn(CREATED_USER_DTO);
-            Mockito.when(userRepository.findByEmail(USER_EMAIL_VALUE)).thenReturn(Optional.of(CREATED_USER_ENTITY));
+            Mockito.when(userMapper.toDto(getCreatedUserEntity())).thenReturn(getCreatedUserDto());
+            Mockito.when(userRepository.findByEmail(USER_EMAIL_VALUE)).thenReturn(Optional.of(getCreatedUserEntity()));
 
-            UserDto expectedUserDto = CREATED_USER_DTO;
+            UserDto expectedUserDto = getCreatedUserDto();
 
             UserDto actualUserDto = userService.findByEmail(USER_EMAIL_VALUE);
 
             assertThat(actualUserDto).isEqualTo(expectedUserDto);
 
             Mockito.verify(userCacheService, Mockito.times(1)).getByEmail(USER_EMAIL_VALUE);
-            Mockito.verify(userMapper, Mockito.times(1)).toDto(CREATED_USER_ENTITY);
+            Mockito.verify(userMapper, Mockito.times(1)).toDto(getCreatedUserEntity());
             Mockito.verify(userRepository, Mockito.times(1)).findByEmail(USER_EMAIL_VALUE);
         }
 
