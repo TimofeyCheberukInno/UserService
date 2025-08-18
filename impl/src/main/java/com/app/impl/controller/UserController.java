@@ -7,7 +7,6 @@ import jakarta.validation.constraints.Email;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,13 +17,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.app.impl.dto.userDtos.UserCreateDto;
 import com.app.impl.dto.userDtos.UserDto;
 import com.app.impl.dto.userDtos.UserUpdateDto;
 import com.app.impl.service.UserService;
 
-// FIXME : @ResponseEntity annotation
 @RestController
 @RequestMapping("/api/users")
 @Validated
@@ -37,44 +36,44 @@ public class UserController {
 	}
 
 	@PostMapping
-	public ResponseEntity<UserDto> createUser(@RequestBody @Valid UserCreateDto createDto) {
-		UserDto dto = userService.create(createDto);
-		return new ResponseEntity<>(dto, HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED)
+	public UserDto createUser(@RequestBody @Valid UserCreateDto createDto) {
+		return userService.create(createDto);
 	}
 
 	@PutMapping
-	public ResponseEntity<Integer> updateUser(@RequestBody @Valid UserUpdateDto updateDto) {
-		int countOfUpdatedEntities = userService.update(updateDto);
-		return new ResponseEntity<>(countOfUpdatedEntities, HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+	public int updateUser(@RequestBody @Valid UserUpdateDto updateDto) {
+		return userService.update(updateDto);
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deleteUser(@PathVariable Long id) {
 		userService.delete(id);
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
-		UserDto dto = userService.findById(id);
-		return new ResponseEntity<>(dto, HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+	public UserDto getUserById(@PathVariable Long id) {
+		return userService.findById(id);
 	}
 
 	@GetMapping("/by-email")
-	public ResponseEntity<UserDto> getUserByEmail(@RequestParam @Email String email) {
-		UserDto dto = userService.findByEmail(email);
-		return new ResponseEntity<>(dto, HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+	public UserDto getUserByEmail(@RequestParam @Email String email) {
+		return userService.findByEmail(email);
 	}
 
 	@GetMapping("/by-ids")
-	public ResponseEntity<List<UserDto>> getListOfUsersByIds(@RequestParam List<Long> ids) {
-		List<UserDto> dtos = userService.findByIds(ids);
-		return new ResponseEntity<>(dtos, HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+	public List<UserDto> getListOfUsersByIds(@RequestParam List<Long> ids) {
+		return userService.findByIds(ids);
 	}
 
 	@GetMapping
-	public ResponseEntity<List<UserDto>> getAll() {
-		List<UserDto> dtos = userService.findAll();
-		return new ResponseEntity<>(dtos, HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+	public List<UserDto> getAll() {
+		return userService.findAll();
 	}
 }
