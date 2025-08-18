@@ -112,6 +112,10 @@ public class UserServiceTestConstants {
         return new ArrayList<>(Arrays.asList(userDto1, userDto2, userDto3));
     }
 
+    public static List<UserDto> getEmptyListOfUserDtos() {
+        return new ArrayList<>();
+    }
+
     public static List<User> getListOfCachedUsers() {
         return new ArrayList<>(Arrays.asList(user2, user3));
     }

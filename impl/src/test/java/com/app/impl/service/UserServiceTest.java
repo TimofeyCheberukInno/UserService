@@ -44,6 +44,7 @@ import static com.app.impl.service.support.UserServiceTestConstants.getFullListO
 import static com.app.impl.service.support.UserServiceTestConstants.getListOfCachedUsers;
 import static com.app.impl.service.support.UserServiceTestConstants.getListOfNotCachedUsers;
 import static com.app.impl.service.support.UserServiceTestConstants.getListOfNotCachedUserIds;
+import static com.app.impl.service.support.UserServiceTestConstants.getEmptyListOfUserDtos;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -320,5 +321,43 @@ class UserServiceTest {
         }
     }
 
-    // TODO: tests for findAll()
+    @Nested
+    @DisplayName("Tests for findAll()")
+    class findAllTests {
+        @Test
+        @DisplayName("return not empty list")
+        void shouldReturnNotEmptyList(){
+            Mockito.when(userRepository.findAll())
+                    .thenReturn(getFullListOfUsers());
+            Mockito.when(userMapper.toDtoList(getFullListOfUsers()))
+                    .thenReturn(getFullListOfUserDtos());
+
+            List<UserDto> expectedValues = getFullListOfUserDtos();
+
+            List<UserDto> actualValues = userService.findAll();
+
+            Mockito.verify(userRepository, Mockito.times(1))
+                    .findAll();
+            Mockito.verify(userMapper, Mockito.times(1))
+                    .toDtoList(getFullListOfUsers());
+        }
+
+        @Test
+        @DisplayName("return empty list")
+        void shouldReturnEmptyList(){
+            Mockito.when(userRepository.findAll())
+                    .thenReturn(getEmptyListOfUsers());
+            Mockito.when(userMapper.toDtoList(getEmptyListOfUsers()))
+                    .thenReturn(getEmptyListOfUserDtos());
+
+            List<UserDto> expectedValues = getEmptyListOfUserDtos();
+
+            List<UserDto> actualValues = userService.findAll();
+
+            Mockito.verify(userRepository, Mockito.times(1))
+                    .findAll();
+            Mockito.verify(userMapper, Mockito.times(1))
+                    .toDtoList(getEmptyListOfUsers());
+        }
+    }
 }
