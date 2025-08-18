@@ -1,5 +1,7 @@
 package com.app.impl.service;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 import static com.app.impl.service.support.CardServiceTestConstants.AMOUNT_OF_UPDATED_ENTITIES;
 import static com.app.impl.service.support.CardServiceTestConstants.CARD_ENTITY_ID;
 import static com.app.impl.service.support.CardServiceTestConstants.CARD_NOT_FOUND_BY_ID_MSG;
@@ -36,7 +38,6 @@ import static com.app.impl.service.support.CardServiceTestConstants.getMappedCar
 import static com.app.impl.service.support.CardServiceTestConstants.getMappedCardEntityWithUser;
 import static com.app.impl.service.support.CardServiceTestConstants.getUpdateCardDto;
 import static com.app.impl.service.support.CardServiceTestConstants.getUserEntity;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,7 +64,6 @@ import com.app.impl.repository.CardRepository;
 import com.app.impl.repository.UserRepository;
 import com.app.impl.service.impl.CardServiceImpl;
 
-// FIXME: add containsExactlyInAnyOrderElementsOf to methods with collections
 @ExtendWith(SpringExtension.class)
 public class CardServiceTest {
 	@Mock
@@ -380,7 +380,7 @@ public class CardServiceTest {
 
 			List<CardDto> actualValues = cardService.findByIds(getFullListOfIds());
 
-			assertThat(actualValues).isEqualTo(expectedValues);
+			Assertions.assertThat(actualValues).containsExactlyInAnyOrderElementsOf(expectedValues);
 
 			Mockito.verify(cardCacheService, Mockito.times(1))
                     .getByIdsWithoutUser(getFullListOfIds());
@@ -408,7 +408,7 @@ public class CardServiceTest {
 
 			List<CardDto> actualValues = cardService.findByIds(getFullListOfIds());
 
-			assertThat(actualValues).isEqualTo(expectedValues);
+			Assertions.assertThat(actualValues).containsExactlyInAnyOrderElementsOf(expectedValues);
 
 			Mockito.verify(cardCacheService, Mockito.times(1))
                     .getByIdsWithoutUser(getFullListOfIds());
@@ -432,7 +432,7 @@ public class CardServiceTest {
 
 			List<CardDto> actualValues = cardService.findByIds(getFullListOfIds());
 
-			assertThat(actualValues).isEqualTo(expectedValues);
+			Assertions.assertThat(actualValues).containsExactlyInAnyOrderElementsOf(expectedValues);
 
 			Mockito.verify(cardCacheService, Mockito.times(1))
                     .getByIdsWithoutUser(getFullListOfIds());
@@ -476,7 +476,7 @@ public class CardServiceTest {
 
 			List<CardWithUserDto> actualValues = cardService.findByIdsWithUser(getFullListOfIds());
 
-			assertThat(actualValues).isEqualTo(expectedValues);
+			Assertions.assertThat(actualValues).containsExactlyInAnyOrderElementsOf(expectedValues);
 
 			Mockito.verify(cardCacheService, Mockito.times(1))
                     .getByIdsWithUser(getFullListOfIds());
@@ -504,7 +504,7 @@ public class CardServiceTest {
 
 			List<CardWithUserDto> actualValues = cardService.findByIdsWithUser(getFullListOfIds());
 
-			assertThat(actualValues).isEqualTo(expectedValues);
+			Assertions.assertThat(actualValues).containsExactlyInAnyOrderElementsOf(expectedValues);
 
 			Mockito.verify(cardCacheService, Mockito.times(1))
                     .getByIdsWithUser(getFullListOfIds());
@@ -528,7 +528,7 @@ public class CardServiceTest {
 
 			List<CardWithUserDto> actualValues = cardService.findByIdsWithUser(getFullListOfIds());
 
-			assertThat(actualValues).isEqualTo(expectedValues);
+			Assertions.assertThat(actualValues).containsExactlyInAnyOrderElementsOf(expectedValues);
 
 			Mockito.verify(cardCacheService, Mockito.times(1))
                     .getByIdsWithUser(getFullListOfIds());
@@ -576,7 +576,7 @@ public class CardServiceTest {
 
 			List<CardDto> actualValues = cardService.findAll();
 
-			assertThat(actualValues).isEqualTo(expectedValues);
+			Assertions.assertThat(actualValues).containsExactlyInAnyOrderElementsOf(expectedValues);
 
 			Mockito.verify(cardRepository, Mockito.times(1))
                     .findAll();
@@ -595,7 +595,7 @@ public class CardServiceTest {
 
 			List<CardDto> actualValues = cardService.findAll();
 
-			assertThat(actualValues).isEqualTo(expectedValues);
+			Assertions.assertThat(actualValues).containsExactlyInAnyOrderElementsOf(expectedValues);
 
 			Mockito.verify(cardRepository, Mockito.times(1))
                     .findAll();
@@ -615,7 +615,7 @@ public class CardServiceTest {
 
 			List<CardWithUserDto> actualValues = cardService.findAllWithUser();
 
-			assertThat(actualValues).isEqualTo(expectedValues);
+			Assertions.assertThat(actualValues).containsExactlyInAnyOrderElementsOf(expectedValues);
 
 			Mockito.verify(cardRepository, Mockito.times(1))
                     .findAllWithUser();
@@ -635,7 +635,7 @@ public class CardServiceTest {
 
 			List<CardWithUserDto> actualValues = cardService.findAllWithUser();
 
-			assertThat(actualValues).isEqualTo(expectedValues);
+			Assertions.assertThat(actualValues).containsExactlyInAnyOrderElementsOf(expectedValues);
 
 			Mockito.verify(cardRepository, Mockito.times(1))
                     .findAllWithUser();
