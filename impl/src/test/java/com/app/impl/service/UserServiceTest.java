@@ -1,5 +1,8 @@
 package com.app.impl.service;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
+
 import static com.app.impl.service.support.UserServiceTestConstants.AMOUNT_OF_UPDATED_USERS;
 import static com.app.impl.service.support.UserServiceTestConstants.LIST_OF_USERS_NOT_FOUND_BY_IDS_MSG;
 import static com.app.impl.service.support.UserServiceTestConstants.USER_EMAIL_VALUE;
@@ -22,8 +25,6 @@ import static com.app.impl.service.support.UserServiceTestConstants.getMapperUse
 import static com.app.impl.service.support.UserServiceTestConstants.getUserCreateDto;
 import static com.app.impl.service.support.UserServiceTestConstants.getUserUpdateDto;
 import static com.app.impl.service.support.UserServiceTestConstants.getUserUpdateEntity;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +46,6 @@ import com.app.impl.mapper.UserMapper;
 import com.app.impl.repository.UserRepository;
 import com.app.impl.service.impl.UserServiceImpl;
 
-// FIXME: add containsExactlyInAnyOrderElementsOf to methods with collections
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 	@Mock
@@ -310,7 +310,7 @@ class UserServiceTest {
 
 			List<UserDto> actualValues = userService.findByIds(getInitialListOfIds());
 
-			Assertions.assertThat(actualValues).isEqualTo(expectedValues);
+			Assertions.assertThat(actualValues).containsExactlyInAnyOrderElementsOf(expectedValues);
 
 			Mockito.verify(userCacheService, Mockito.times(1))
                     .getByIds(getInitialListOfIds());
@@ -334,7 +334,7 @@ class UserServiceTest {
 
 			List<UserDto> actualValues = userService.findByIds(getInitialListOfIds());
 
-			assertThat(actualValues).isEqualTo(expectedValues);
+			Assertions.assertThat(actualValues).containsExactlyInAnyOrderElementsOf(expectedValues);
 
 			Mockito.verify(userCacheService, Mockito.times(1))
                     .getByIds(getInitialListOfIds());
@@ -358,7 +358,7 @@ class UserServiceTest {
 
 			List<UserDto> actualValues = userService.findByIds(getInitialListOfIds());
 
-			Assertions.assertThat(actualValues).isEqualTo(expectedValues);
+			Assertions.assertThat(actualValues).containsExactlyInAnyOrderElementsOf(expectedValues);
 
 			Mockito.verify(userCacheService, Mockito.times(1))
                     .getByIds(getInitialListOfIds());
@@ -404,6 +404,8 @@ class UserServiceTest {
 
 			List<UserDto> actualValues = userService.findAll();
 
+            Assertions.assertThat(actualValues).containsExactlyInAnyOrderElementsOf(expectedValues);
+
 			Mockito.verify(userRepository, Mockito.times(1))
                     .findAll();
 			Mockito.verify(userMapper, Mockito.times(1))
@@ -421,6 +423,8 @@ class UserServiceTest {
 			List<UserDto> expectedValues = getEmptyListOfUserDtos();
 
 			List<UserDto> actualValues = userService.findAll();
+
+            Assertions.assertThat(actualValues).containsExactlyInAnyOrderElementsOf(expectedValues);
 
 			Mockito.verify(userRepository, Mockito.times(1))
                     .findAll();
