@@ -8,5 +8,4 @@ public record CardDto(
         String cardNumber,
         String cardHolderName,
         LocalDate expirationDate
-) {
-}
+) { }
