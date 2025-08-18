@@ -10,6 +10,5 @@ public record CardWithUserDto(
         String cardNumber,
         String cardHolderName,
         LocalDate expirationDate,
-        UserDto userDto
-) {
-}
+		UserDto userDto
+) { }

@@ -13,22 +13,20 @@ import org.springframework.stereotype.Repository;
 import com.app.impl.entity.Card;
 
 @Repository
-public interface CardRepository extends JpaRepository<Card,Long> {
-    @Query("SELECT c FROM Card c JOIN FETCH c.user u WHERE c.id = :id")
-    Optional<Card> findByIdWithUser(@Param("id") Long id);
+public interface CardRepository extends JpaRepository<Card, Long> {
+	@Query("SELECT c FROM Card c JOIN FETCH c.user u WHERE c.id = :id")
+	Optional<Card> findByIdWithUser(@Param("id") Long id);
 
-    @Modifying
-    @Query("UPDATE Card с " +
-            "SET с.cardHolderName = :#{#card.cardHolderName} " +
-            "WHERE с.id = :#{#card.id}")
-    int updateCard(@Param("card") Card card);
+	@Modifying
+	@Query("UPDATE Card с " + "SET с.cardHolderName = :#{#card.cardHolderName} " + "WHERE с.id = :#{#card.id}")
+	int updateCard(@Param("card") Card card);
 
-    @Query("SELECT c FROM Card c WHERE c.id IN :ids")
-    List<Card> findAllByIds(@Param("ids") Collection<Long> ids);
+	@Query("SELECT c FROM Card c WHERE c.id IN :ids")
+	List<Card> findAllByIds(@Param("ids") Collection<Long> ids);
 
-    @Query("SELECT c FROM Card c JOIN FETCH c.user u WHERE c.id IN :ids")
-    List<Card> findAllByIdsWithUser(@Param("ids") Collection<Long> ids);
+	@Query("SELECT c FROM Card c JOIN FETCH c.user u WHERE c.id IN :ids")
+	List<Card> findAllByIdsWithUser(@Param("ids") Collection<Long> ids);
 
-    @Query("SELECT c FROM Card c JOIN FETCH c.user u")
-    List<Card> findAllWithUser();
+	@Query("SELECT c FROM Card c JOIN FETCH c.user u")
+	List<Card> findAllWithUser();
 }
