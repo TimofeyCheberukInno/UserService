@@ -550,7 +550,89 @@ public class CardServiceTest {
             Mockito.verify(cardMapper, Mockito.times(1))
                     .toDtoWithUser(Mockito.any());
         }
+    }
 
-        // TODO: tests for findAll() and findAllWithUser()
+    @Nested
+    @DisplayName("Tests for findAll() and findAllWithUser()")
+    class findAllTests {
+        @Test
+        @DisplayName("returns not empty list")
+        void shouldReturnNotEmptyList() {
+            Mockito.when(cardRepository.findAll())
+                    .thenReturn(getFullListOfCardsWithoutUsers());
+            Mockito.when(cardMapper.toDtoList(getFullListOfCardsWithoutUsers()))
+                    .thenReturn(getFullListOfCardDtos());
+
+            List<CardDto> expectedValues = getFullListOfCardDtos();
+
+            List<CardDto> actualValues = cardService.findAll();
+
+            assertThat(actualValues).isEqualTo(expectedValues);
+
+            Mockito.verify(cardRepository, Mockito.times(1))
+                    .findAll();
+            Mockito.verify(cardMapper, Mockito.times(1))
+                    .toDtoList(getFullListOfCardsWithoutUsers());
+        }
+
+        @Test
+        @DisplayName("returns empty list")
+        void shouldReturnEmptyList() {
+            Mockito.when(cardRepository.findAll())
+                    .thenReturn(getEmptyListOfCards());
+            Mockito.when(cardMapper.toDtoList(getEmptyListOfCards()))
+                    .thenReturn(getEmptyListOfCardDtos());
+
+            List<CardDto> expectedValues = getEmptyListOfCardDtos();
+
+            List<CardDto> actualValues = cardService.findAll();
+
+            assertThat(actualValues).isEqualTo(expectedValues);
+
+            Mockito.verify(cardRepository, Mockito.times(1))
+                    .findAll();
+            Mockito.verify(cardMapper, Mockito.times(1))
+                    .toDtoList(getEmptyListOfCards());
+        }
+
+        @Test
+        @DisplayName("returns not empty list with users")
+        void shouldReturnNotEmptyListWithUsers() {
+            Mockito.when(cardRepository.findAllWithUser())
+                    .thenReturn(getFullListOfCardsWithUsers());
+            Mockito.when(cardMapper.toDtoWithUserList(getFullListOfCardsWithUsers()))
+                    .thenReturn(getFullListOfCardDtosWithUsers());
+
+            List<CardWithUserDto> expectedValues = getFullListOfCardDtosWithUsers();
+
+            List<CardWithUserDto> actualValues = cardService.findAllWithUser();
+
+            assertThat(actualValues).isEqualTo(expectedValues);
+
+            Mockito.verify(cardRepository, Mockito.times(1))
+                    .findAllWithUser();
+            Mockito.verify(cardMapper, Mockito.times(1))
+                    .toDtoWithUserList(getFullListOfCardsWithUsers());
+        }
+
+        @Test
+        @DisplayName("returns empty list with users")
+        void shouldReturnEmptyListWithUsers() {
+            Mockito.when(cardRepository.findAllWithUser())
+                    .thenReturn(getEmptyListOfCards());
+            Mockito.when(cardMapper.toDtoWithUserList(getEmptyListOfCards()))
+                    .thenReturn(getEmptyListOfCardDtosWithUsers());
+
+            List<CardWithUserDto> expectedValues = getEmptyListOfCardDtosWithUsers();
+
+            List<CardWithUserDto> actualValues = cardService.findAllWithUser();
+
+            assertThat(actualValues).isEqualTo(expectedValues);
+
+            Mockito.verify(cardRepository, Mockito.times(1))
+                    .findAllWithUser();
+            Mockito.verify(cardMapper, Mockito.times(1))
+                    .toDtoWithUserList(getEmptyListOfCards());
+        }
     }
 }
