@@ -1,14 +1,14 @@
-package com.app.impl.service.support;
+package com.app.impl.unit.service.support;
 
-import static com.app.impl.service.support.CardServiceTestData.CARD_EXPIRATION_DATE;
-import static com.app.impl.service.support.CardServiceTestData.CARD_HOLDER_NAME;
-import static com.app.impl.service.support.CardServiceTestData.CARD_ID;
-import static com.app.impl.service.support.CardServiceTestData.CARD_NUMBER;
-import static com.app.impl.service.support.CardServiceTestData.USER_BIRTHDATE;
-import static com.app.impl.service.support.CardServiceTestData.USER_EMAIL;
-import static com.app.impl.service.support.CardServiceTestData.USER_ID;
-import static com.app.impl.service.support.CardServiceTestData.USER_NAME;
-import static com.app.impl.service.support.CardServiceTestData.USER_SURNAME;
+import static com.app.impl.unit.service.support.CardServiceTestData.CARD_EXPIRATION_DATE;
+import static com.app.impl.unit.service.support.CardServiceTestData.CARD_HOLDER_NAME;
+import static com.app.impl.unit.service.support.CardServiceTestData.CARD_ID;
+import static com.app.impl.unit.service.support.CardServiceTestData.CARD_NUMBER;
+import static com.app.impl.unit.service.support.CardServiceTestData.USER_BIRTHDATE;
+import static com.app.impl.unit.service.support.CardServiceTestData.USER_EMAIL;
+import static com.app.impl.unit.service.support.CardServiceTestData.USER_ID;
+import static com.app.impl.unit.service.support.CardServiceTestData.USER_NAME;
+import static com.app.impl.unit.service.support.CardServiceTestData.USER_SURNAME;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

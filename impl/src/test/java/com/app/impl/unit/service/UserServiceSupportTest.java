@@ -1,4 +1,4 @@
-package com.app.impl.service;
+package com.app.impl.unit.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
