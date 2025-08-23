@@ -1,4 +1,4 @@
-package com.app.impl.unit.service.support;
+package com.app.impl.unit.service.card.support;
 
 import static com.app.impl.unit.service.support.CardServiceTestData.CARD_EXPIRATION_DATE;
 import static com.app.impl.unit.service.support.CardServiceTestData.CARD_HOLDER_NAME;
