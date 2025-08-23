@@ -1,10 +1,10 @@
-package com.app.impl.service.support;
+package com.app.impl.unit.service.support;
 
-import static com.app.impl.service.support.UserServiceTestData.USER_BIRTHDATE;
-import static com.app.impl.service.support.UserServiceTestData.USER_EMAIL;
-import static com.app.impl.service.support.UserServiceTestData.USER_ID;
-import static com.app.impl.service.support.UserServiceTestData.USER_NAME;
-import static com.app.impl.service.support.UserServiceTestData.USER_SURNAME;
+import static com.app.impl.unit.service.support.UserServiceTestData.USER_BIRTHDATE;
+import static com.app.impl.unit.service.support.UserServiceTestData.USER_EMAIL;
+import static com.app.impl.unit.service.support.UserServiceTestData.USER_ID;
+import static com.app.impl.unit.service.support.UserServiceTestData.USER_NAME;
+import static com.app.impl.unit.service.support.UserServiceTestData.USER_SURNAME;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
