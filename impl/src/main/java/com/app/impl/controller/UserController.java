@@ -5,6 +5,7 @@ import java.util.List;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 
+import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -49,13 +50,13 @@ public class UserController {
 
 	@DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-	public void deleteUser(@PathVariable Long id) {
+	public void deleteUser(@PathVariable @Positive Long id) {
 		userService.delete(id);
 	}
 
 	@GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-	public UserDto getUserById(@PathVariable Long id) {
+	public UserDto getUserById(@PathVariable @Positive Long id) {
 		return userService.findById(id);
 	}
 
@@ -67,7 +68,7 @@ public class UserController {
 
 	@GetMapping("/by-ids")
     @ResponseStatus(HttpStatus.OK)
-	public List<UserDto> getListOfUsersByIds(@RequestParam List<Long> ids) {
+	public List<UserDto> getListOfUsersByIds(@RequestParam @Valid List<@Positive Long> ids) {
 		return userService.findByIds(ids);
 	}
 
