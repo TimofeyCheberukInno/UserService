@@ -122,16 +122,21 @@ class UserServiceTest {
 		@Test
 		@DisplayName("throws UserNotFoundException")
 		void shouldThrowUserNotFoundException() {
-			Mockito.when(userRepository.findById(USER_ID_VALUE)).thenReturn(Optional.empty());
+			Mockito.when(userRepository.findById(USER_ID_VALUE))
+                    .thenReturn(Optional.empty());
 
 			assertThatExceptionOfType(UserNotFoundException.class).isThrownBy(() -> {
 				userService.update(getUserUpdateDto());
 			}).withMessage(USER_NOT_FOUND_BY_ID_MSG, USER_ID_VALUE);
 
-			Mockito.verify(userRepository, Mockito.times(1)).findById(USER_ID_VALUE);
-			Mockito.verify(userRepository, Mockito.never()).updateUser(Mockito.any());
-			Mockito.verify(userMapper, Mockito.never()).toUpdateEntity(Mockito.any());
-			Mockito.verify(userCacheService, Mockito.never()).update(Mockito.any());
+			Mockito.verify(userRepository, Mockito.times(1))
+                    .findById(USER_ID_VALUE);
+			Mockito.verify(userRepository, Mockito.never())
+                    .updateUser(Mockito.any());
+			Mockito.verify(userMapper, Mockito.never())
+                    .toUpdateEntity(Mockito.any());
+			Mockito.verify(userCacheService, Mockito.never())
+                    .update(Mockito.any());
 		}
 	}
 

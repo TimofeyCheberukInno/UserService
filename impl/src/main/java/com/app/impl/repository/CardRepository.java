@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -17,8 +18,11 @@ public interface CardRepository extends JpaRepository<Card, Long> {
 	@Query("SELECT c FROM Card c JOIN FETCH c.user u WHERE c.id = :id")
 	Optional<Card> findByIdWithUser(@Param("id") Long id);
 
+    @Transactional
 	@Modifying
-	@Query("UPDATE Card с " + "SET с.cardHolderName = :#{#card.cardHolderName} " + "WHERE с.id = :#{#card.id}")
+	@Query("UPDATE Card с " +
+            "SET с.cardHolderName = :#{#card.cardHolderName} " +
+            "WHERE с.id = :#{#card.id}")
 	int updateCard(@Param("card") Card card);
 
 	@Query("SELECT c FROM Card c WHERE c.id IN :ids")
