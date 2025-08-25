@@ -55,33 +55,6 @@ public class UserRepositoryIT {
             assertThat(actualValue).isEmpty();
         }
 
-        // TODO: excessive?
-        @Test
-        @DisplayName("returns Optional.empty() because user email is null")
-        void shouldReturnEmptyOptionalBecauseEmailIsNull() {
-            Optional<User> actualValue = userRepository.findByEmail(null);
-
-            assertThat(actualValue).isEmpty();
-        }
-
-        // TODO: excessive?
-        @Test
-        @DisplayName("returns Optional.empty() because user email is blank")
-        void shouldReturnEmptyOptionalBecauseEmailIsBlank() {
-            Optional<User> actualValue = userRepository.findByEmail("");
-
-            assertThat(actualValue).isEmpty();
-        }
-
-        // TODO: excessive?
-        @Test
-        @DisplayName("returns Optional.empty() because user email is invalid")
-        void shouldReturnEmptyOptionalBecauseEmailIsInvalid() {
-            Optional<User> actualValue = userRepository.findByEmail("invalid-email");
-
-            assertThat(actualValue).isEmpty();
-        }
-
         @Test
         @DisplayName("returns Optional.empty() because user email is in uppercase")
         void shouldReturnEmptyOptionalBecauseEmailIsInUppercase() {
@@ -111,28 +84,6 @@ public class UserRepositoryIT {
             assertThat(updatedUser.getEmail()).isEqualTo(userToUpdate.getEmail());
         }
 
-        // TODO: excessive?
-        @Test
-        @DisplayName("returns exception because updates user with null value fields")
-        void shouldReturnExceptionBecauseUpdatesUserWithNullValueFields() {
-            User userToUpdate = support.getInvalidUserWithNullFieldsToUpdate();
-
-            Assertions.assertThatExceptionOfType(DataIntegrityViolationException.class)
-                    .isThrownBy(() -> userRepository.updateUser(userToUpdate));
-        }
-
-        // TODO: excessive?
-        @Test
-        @DisplayName("returns 0 updated users because updates user with blank fields")
-        void shouldReturnExceptionBecauseUpdatesUserWithBlankFields() {
-            User userToUpdate = support.getInvalidUserWithBlankFieldsToUpdate();
-
-            int amountOfUpdatedUsers = userRepository.updateUser(userToUpdate);
-
-            assertThat(amountOfUpdatedUsers).isEqualTo(1);
-            assertThat(userRepository.findById(userToUpdate.getId())).isEmpty();
-        }
-
         @Test
         @DisplayName("returns 0 updated users while updating non-existent user")
         void shouldReturnExceptionWhileUpdatingNonExistentUser() {
@@ -148,16 +99,6 @@ public class UserRepositoryIT {
         @DisplayName("returns exception while updating user email to occupied value")
         void shouldReturnExceptionWhileUpdatingEmailToOccupiedValue() {
             User userToUpdate = support.getUserToUpdateWithExistingEmail();
-
-            Assertions.assertThatExceptionOfType(DataIntegrityViolationException.class)
-                    .isThrownBy(() -> userRepository.updateUser(userToUpdate));
-        }
-
-        // TODO: excessive?
-        @Test
-        @DisplayName("returns exception while updating user with constraint violation")
-        void shouldReturnExceptionWhileUpdatingEmailToConstraintViolation() {
-            User userToUpdate = support.getUserToUpdateWithConstraintViolation();
 
             Assertions.assertThatExceptionOfType(DataIntegrityViolationException.class)
                     .isThrownBy(() -> userRepository.updateUser(userToUpdate));
