@@ -3,6 +3,7 @@ package com.app.impl.controller;
 import java.util.List;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,31 +50,31 @@ public class CardController {
 
 	@DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-	public void deleteCard(@PathVariable Long id) {
+	public void deleteCard(@PathVariable @Positive Long id) {
 		cardService.delete(id);
 	}
 
 	@GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-	public CardDto getCardById(@PathVariable Long id) {
+	public CardDto getCardById(@PathVariable @Positive Long id) {
 		return cardService.findById(id);
 	}
 
 	@GetMapping("/{id}/with-user")
     @ResponseStatus(HttpStatus.OK)
-	public CardWithUserDto getCardWithUserById(@PathVariable Long id) {
+	public CardWithUserDto getCardWithUserById(@PathVariable @Positive Long id) {
 		return cardService.findByIdWithUser(id);
 	}
 
 	@GetMapping("/by-ids")
     @ResponseStatus(HttpStatus.OK)
-	public List<CardDto> getListOfCardsById(@RequestParam List<Long> ids) {
+	public List<CardDto> getListOfCardsById(@RequestParam @Valid List<@Positive Long> ids) {
 		return cardService.findByIds(ids);
 	}
 
 	@GetMapping("/by-ids/with-user")
     @ResponseStatus(HttpStatus.OK)
-	public List<CardWithUserDto> getListOfCardsWithUserById(@RequestParam List<Long> ids) {
+	public List<CardWithUserDto> getListOfCardsWithUserById(@RequestParam @Valid List<@Positive Long> ids) {
 		return cardService.findByIdsWithUser(ids);
 	}
 
