@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import java.util.Optional;
 
-import com.app.impl.integration.UserITSupport;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,15 +12,14 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 
+import com.app.impl.integration.UserITSupport;
 import com.app.impl.entity.User;
 import com.app.impl.repository.UserRepository;
 
 @SpringBootTest
-@Import(UserITSupport.class)
 @ActiveProfiles("jpa")
 public class UserRepositoryIT {
     @Autowired
@@ -30,7 +28,7 @@ public class UserRepositoryIT {
     private UserITSupport support;
 
     @BeforeEach
-    void setup() {
+    void setUp() {
         userRepository.deleteAll();
     }
 
@@ -40,59 +38,59 @@ public class UserRepositoryIT {
         @Test
         @DisplayName("return user by email")
         void shouldReturnUserByEmail() {
-            User expectedUser = support.createUser();
+            User expectedValue = support.createUser();
 
-            Optional<User> actualUser = userRepository.findByEmail(expectedUser.getEmail());
+            Optional<User> actualValue = userRepository.findByEmail(expectedValue.getEmail());
 
-            assertThat(actualUser).isPresent()
+            assertThat(actualValue).isPresent()
                     .get()
-                    .isEqualTo(expectedUser);
+                    .isEqualTo(expectedValue);
         }
 
         @Test
         @DisplayName("return Optional.empty() because no existing user with email")
         void shouldReturnEmptyOptional() {
-            Optional<User> actualUser = userRepository.findByEmail("mamama@gmail.com");
+            Optional<User> actualValue = userRepository.findByEmail("mamama@gmail.com");
 
-            assertThat(actualUser).isEmpty();
+            assertThat(actualValue).isEmpty();
         }
 
         // TODO: excessive?
         @Test
-        @DisplayName("returns Optional.empty() because email is null")
+        @DisplayName("returns Optional.empty() because user email is null")
         void shouldReturnEmptyOptionalBecauseEmailIsNull() {
-            Optional<User> actualUser = userRepository.findByEmail(null);
+            Optional<User> actualValue = userRepository.findByEmail(null);
 
-            assertThat(actualUser).isEmpty();
+            assertThat(actualValue).isEmpty();
         }
 
         // TODO: excessive?
         @Test
-        @DisplayName("returns Optional.empty() because email is blank")
+        @DisplayName("returns Optional.empty() because user email is blank")
         void shouldReturnEmptyOptionalBecauseEmailIsBlank() {
-            Optional<User> actualUser = userRepository.findByEmail("");
+            Optional<User> actualValue = userRepository.findByEmail("");
 
-            assertThat(actualUser).isEmpty();
+            assertThat(actualValue).isEmpty();
         }
 
         // TODO: excessive?
         @Test
-        @DisplayName("returns Optional.empty() because email is invalid")
+        @DisplayName("returns Optional.empty() because user email is invalid")
         void shouldReturnEmptyOptionalBecauseEmailIsInvalid() {
-            Optional<User> actualUser = userRepository.findByEmail("invalid-email");
+            Optional<User> actualValue = userRepository.findByEmail("invalid-email");
 
-            assertThat(actualUser).isEmpty();
+            assertThat(actualValue).isEmpty();
         }
 
         @Test
-        @DisplayName("returns Optional.empty() because email is in uppercase")
+        @DisplayName("returns Optional.empty() because user email is in uppercase")
         void shouldReturnEmptyOptionalBecauseEmailIsInUppercase() {
-            User expectedUser = support.createUser();
+            User expectedValue = support.createUser();
 
-            String[] parts = expectedUser.getEmail().split("@");
-            Optional<User> actualUser = userRepository.findByEmail(parts[0].toUpperCase() + "@" + parts[1]);
+            String[] parts = expectedValue.getEmail().split("@");
+            Optional<User> actualValue = userRepository.findByEmail(parts[0].toUpperCase() + "@" + parts[1]);
 
-            assertThat(actualUser).isEmpty();
+            assertThat(actualValue).isEmpty();
         }
     }
 
@@ -107,6 +105,10 @@ public class UserRepositoryIT {
             int amountOfUpdatedUsers = userRepository.updateUser(userToUpdate);
 
             assertThat(amountOfUpdatedUsers).isEqualTo(1);
+            User updatedUser = userRepository.findById(userToUpdate.getId()).get();
+            assertThat(updatedUser.getName()).isEqualTo(userToUpdate.getName());
+            assertThat(updatedUser.getSurname()).isEqualTo(userToUpdate.getSurname());
+            assertThat(updatedUser.getEmail()).isEqualTo(userToUpdate.getEmail());
         }
 
         // TODO: excessive?
@@ -128,20 +130,22 @@ public class UserRepositoryIT {
             int amountOfUpdatedUsers = userRepository.updateUser(userToUpdate);
 
             assertThat(amountOfUpdatedUsers).isEqualTo(1);
+            assertThat(userRepository.findById(userToUpdate.getId())).isEmpty();
         }
 
         @Test
-        @DisplayName("returns 0 updated users while updation non-existent user")
-        void shouldReturnExceptionWhileUpdationNonExistentUser() {
+        @DisplayName("returns 0 updated users while updating non-existent user")
+        void shouldReturnExceptionWhileUpdatingNonExistentUser() {
             User userToUpdate = support.getUserToUpdateWithoutCreatingUser();
 
             int amountOfUpdatedUsers = userRepository.updateUser(userToUpdate);
 
             assertThat(amountOfUpdatedUsers).isEqualTo(0);
+            assertThat(userRepository.findById(userToUpdate.getId())).isEmpty();
         }
 
         @Test
-        @DisplayName("returns exception while updating email to occupied value")
+        @DisplayName("returns exception while updating user email to occupied value")
         void shouldReturnExceptionWhileUpdatingEmailToOccupiedValue() {
             User userToUpdate = support.getUserToUpdateWithExistingEmail();
 
@@ -151,7 +155,7 @@ public class UserRepositoryIT {
 
         // TODO: excessive?
         @Test
-        @DisplayName("returns exception while updation with constraint violation")
+        @DisplayName("returns exception while updating user with constraint violation")
         void shouldReturnExceptionWhileUpdatingEmailToConstraintViolation() {
             User userToUpdate = support.getUserToUpdateWithConstraintViolation();
 
@@ -160,7 +164,7 @@ public class UserRepositoryIT {
         }
 
         @Test
-        @DisplayName("check if operation was transactional")
+        @DisplayName("check if operation with user was transactional")
         void shouldCheckIfOperationWasTransactional() {
             User userToUpdate = support.getUserToUpdateWithExistingEmail();
 
@@ -181,49 +185,49 @@ public class UserRepositoryIT {
         @Test
         @DisplayName("returns list of users")
         void shouldReturnListOfUsers() {
-            List<User> expectedUsers = support.createListOfUsers();
+            List<User> expectedValues = support.createListOfUsers();
 
-            List<User> actualUsers = userRepository.findAllByIds(List.of(expectedUsers.get(0).getId(), expectedUsers.get(1).getId()));
+            List<User> actualValues = userRepository.findAllByIds(List.of(expectedValues.get(0).getId(), expectedValues.get(1).getId()));
 
-            assertThat(actualUsers).isEqualTo(expectedUsers);
+            assertThat(actualValues).isEqualTo(expectedValues);
         }
 
         @Test
         @DisplayName("returns list of users partially")
         void shouldReturnListOfUserPartially() {
-            List<User> expectedUsers = support.createListOfUsers();
+            List<User> expectedValues = support.createListOfUsers();
 
-            List<User> actualUsers = userRepository.findAllByIds(List.of(expectedUsers.get(0).getId(), expectedUsers.get(1).getId(), 3L));
+            List<User> actualValues = userRepository.findAllByIds(List.of(expectedValues.get(0).getId(), expectedValues.get(1).getId(), 3L));
 
-            assertThat(actualUsers.size()).isEqualTo(expectedUsers.size());
-            assertThat(actualUsers).isEqualTo(expectedUsers);
+            assertThat(actualValues.size()).isEqualTo(expectedValues.size());
+            assertThat(actualValues).isEqualTo(expectedValues);
         }
 
         @Test
-        @DisplayName("returns empty list because receives empty list")
+        @DisplayName("returns empty list of users because receives empty list")
         void shouldReturnEmptyListBecauseReceivesEmptyList() {
-            List<User> actualUsers = userRepository.findAllByIds(List.of());
+            List<User> actualValues = userRepository.findAllByIds(List.of());
 
-            assertThat(actualUsers).isEmpty();
+            assertThat(actualValues).isEmpty();
         }
 
         @Test
-        @DisplayName("returns empty list because receives list of non-existent ids")
+        @DisplayName("returns empty list of users because receives list of non-existent ids")
         void shouldReturnEmptyListBecauseReceivesNonExistentIds() {
-            List<User> actualUsers = userRepository.findAllByIds(List.of(1L, 2L, 3L));
+            List<User> actualValues = userRepository.findAllByIds(List.of(1L, 2L, 3L));
 
-            assertThat(actualUsers).isEmpty();
+            assertThat(actualValues).isEmpty();
         }
 
         @Test
         @DisplayName("return list of users where list of ids has duplicates")
         void shouldReturnListOfUsersWithDuplicates() {
-            List<User> expectedUsers = support.createListOfUsers();
+            List<User> expectedValues = support.createListOfUsers();
 
-            List<User> actualUsers = userRepository.findAllByIds(List.of(expectedUsers.get(0).getId(), expectedUsers.get(1).getId(), expectedUsers.get(1).getId()));
+            List<User> actualValues = userRepository.findAllByIds(List.of(expectedValues.get(0).getId(), expectedValues.get(1).getId(), expectedValues.get(1).getId()));
 
-            assertThat(actualUsers.size()).isEqualTo(expectedUsers.size());
-            assertThat(actualUsers).isEqualTo(expectedUsers);
+            assertThat(actualValues.size()).isEqualTo(expectedValues.size());
+            assertThat(actualValues).isEqualTo(expectedValues);
         }
     }
 }

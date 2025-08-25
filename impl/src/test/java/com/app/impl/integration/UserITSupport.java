@@ -14,7 +14,7 @@ import com.app.impl.repository.UserRepository;
 @Component
 public class UserITSupport {
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     public User createUser() {
         User user = new User(
@@ -31,55 +31,47 @@ public class UserITSupport {
     public User getUserToUpdate() {
         User createdUser = createUser();
 
-        User user = new User(
+        return new User(
                 createdUser.getId(),
                 "UPDATED_NAME_1",
                 "UPDATED_SURNAME_1",
-                LocalDate.of(2005, 5, 13),
+                null,
                 "updated_example@gmail.com"
         );
-
-        return user;
     }
 
     public User getInvalidUserWithNullFieldsToUpdate() {
         User createdUser = createUser();
 
-        User user = new User(
+        return new User(
                 createdUser.getId(),
                 null,
                 null,
-                LocalDate.of(2005, 5, 13),
+                null,
                 null
         );
-
-        return user;
     }
 
     public User getInvalidUserWithBlankFieldsToUpdate() {
         User createdUser = createUser();
 
-        User user = new User(
+        return new User(
                 createdUser.getId(),
                 "",
                 "",
-                LocalDate.of(2005, 5, 13),
+                null,
                 ""
         );
-
-        return user;
     }
 
     public User getUserToUpdateWithoutCreatingUser() {
-        User user = new User(
+        return new User(
                 1L,
                 "UPDATED_NAME_1",
                 "UPDATED_SURNAME_1",
-                LocalDate.of(2005, 5, 13),
+                null,
                 "updated_example@gmail.com"
         );
-
-        return user;
     }
 
     public User createSecondUser() {
@@ -97,29 +89,25 @@ public class UserITSupport {
         User user = createSecondUser();
         User createdUser = userRepository.save(user);
 
-        User userToUpdate = new User(
+        return new User(
                 createdUser.getId(),
                 "UPDATED_NAME_2",
                 "UPDATED_SURNAME_2",
-                LocalDate.of(2007, 10, 13),
+                null,
                 "example@gmail.com"
         );
-
-        return userToUpdate;
     }
 
     public User getUserToUpdateWithConstraintViolation() {
         User user = createUser();
 
-        User userToUpdate = new User(
+        return new User(
                 user.getId(),
                 "CONSTRAINT_VIOLATION_CONSTRAINT_VIOLATION_CONSTRAINT_VIOLATION_CONSTRAINT_VIOLATION_",
                 "UPDATED_SURNAME_2",
-                LocalDate.of(2007, 10, 13),
+                null,
                 "example@gmail.com"
         );
-
-        return userToUpdate;
     }
 
     public List<User> createListOfUsers() {
