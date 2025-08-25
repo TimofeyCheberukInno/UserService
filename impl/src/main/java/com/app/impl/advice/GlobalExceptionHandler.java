@@ -120,6 +120,18 @@ public class GlobalExceptionHandler {
         );
 	}
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(
+            IllegalArgumentException ex,
+            WebRequest request
+    ) {
+        return buildErrorResponse(
+                HttpStatus.BAD_REQUEST,
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+    }
+
 	@ExceptionHandler(jakarta.validation.ConstraintViolationException.class)
 	public ResponseEntity<ErrorResponse> handleJakartaValidationConstraintViolationException(
 			jakarta.validation.ConstraintViolationException ex,
