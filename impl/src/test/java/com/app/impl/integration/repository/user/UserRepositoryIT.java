@@ -15,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 
-import com.app.impl.integration.UserITSupport;
+import com.app.impl.integration.support.user.UserITSupport;
 import com.app.impl.entity.User;
 import com.app.impl.repository.UserRepository;
 

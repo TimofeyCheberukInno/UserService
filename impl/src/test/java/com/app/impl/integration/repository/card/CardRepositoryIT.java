@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Profile;
 
 import com.app.impl.repository.UserRepository;
 import com.app.impl.entity.Card;
-import com.app.impl.integration.CardITSupport;
+import com.app.impl.integration.support.card.CardITSupport;
 import com.app.impl.repository.CardRepository;
 
 

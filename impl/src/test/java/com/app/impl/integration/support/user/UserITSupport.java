@@ -1,4 +1,4 @@
-package com.app.impl.integration;
+package com.app.impl.integration.support.user;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
