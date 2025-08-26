@@ -102,4 +102,11 @@ public class UserCacheService {
 		redisTemplate.delete(makeKey(USERS_CACHE_PREFIX, email));
 		log.info("Evicting cache for {} with email {}...", USERS_CACHE_PREFIX, email);
 	}
+
+    public void deleteAll() {
+        var keys = redisTemplate.keys(USERS_CACHE_PREFIX + ":*");
+        if(keys != null && !keys.isEmpty()){
+            redisTemplate.delete(keys);
+        }
+    }
 }
