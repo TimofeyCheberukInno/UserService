@@ -160,7 +160,31 @@ public class GlobalExceptionHandler {
         );
 	}
 
-	@ExceptionHandler(Exception.class)
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<ErrorResponse> handleNullPointerExceptio(
+            NullPointerException ex,
+            WebRequest request
+    ) {
+        return buildErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorResponse> handleRuntimeException(
+            RuntimeException ex,
+            WebRequest request
+    ) {
+        return buildErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+    }
+
+    @ExceptionHandler(Exception.class)
 	public ResponseEntity<ErrorResponse> handleException(
             Exception ex,
             WebRequest request
