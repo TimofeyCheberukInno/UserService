@@ -1,8 +1,9 @@
 package com.app.impl.entity;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,8 +19,6 @@ import lombok.Setter;
 import lombok.Getter;
 import lombok.Builder;
 
-import java.time.LocalDate;
-
 @Entity
 @Table(name = "card_info",
     indexes = {
@@ -30,15 +29,16 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Builder
-@NamedQuery(name = "Card.findByEmail",
-        query = "SELECT c FROM Card c WHERE c.user.email = :userEmail")
 public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinColumn(name = "user_id", nullable = false)
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name = "user_entity", nullable = false)
     private User user;
 
     @Column(name = "number", nullable = false, unique = true, length = 30)

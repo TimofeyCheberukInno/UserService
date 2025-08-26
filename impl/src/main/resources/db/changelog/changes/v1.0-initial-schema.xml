@@ -37,6 +37,9 @@
                 <column name="user_id" type="bigint">
                     <constraints nullable="false"/>
                 </column>
+                <column name="user_entity" type="bigint">
+                    <constraints nullable="false"/>
+                </column>
                 <column name="number" type="varchar(30)">
                     <constraints nullable="false" unique="true"/>
                 </column>
@@ -53,7 +56,9 @@
                     baseColumnNames="user_id"
                     constraintName="fk_card_user"
                     referencedTableName="users"
-                    referencedColumnNames="id" />
+                    referencedColumnNames="id"
+                    onDelete="CASCADE"
+            />
 
             <createIndex tableName="card_info" indexName="idx_user_id">
                 <column name="user_id"/>
