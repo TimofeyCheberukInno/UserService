@@ -66,6 +66,8 @@
 			<groupId>org.liquibase</groupId>
 			<artifactId>liquibase-core</artifactId>
 		</dependency>
+
+        <!-- Caching -->
         <dependency>
 			<groupId>redis.clients</groupId>
 			<artifactId>jedis</artifactId>

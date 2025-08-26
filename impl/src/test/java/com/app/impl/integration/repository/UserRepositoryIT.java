@@ -1,4 +1,4 @@
-package com.app.impl.integration.repository.user;
+package com.app.impl.integration.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -15,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 
-import com.app.impl.integration.support.user.UserITSupport;
+import com.app.impl.integration.support.UserITSupport;
 import com.app.impl.entity.User;
 import com.app.impl.repository.UserRepository;
 

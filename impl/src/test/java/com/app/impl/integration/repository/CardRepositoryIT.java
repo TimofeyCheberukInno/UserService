@@ -1,4 +1,4 @@
-package com.app.impl.integration.repository.card;
+package com.app.impl.integration.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -11,15 +11,15 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Profile;
 
 import com.app.impl.repository.UserRepository;
 import com.app.impl.entity.Card;
-import com.app.impl.integration.support.card.CardITSupport;
+import com.app.impl.integration.support.CardITSupport;
 import com.app.impl.repository.CardRepository;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
-@Profile("jpa")
+@ActiveProfiles("jpa")
 public class CardRepositoryIT {
     @Autowired
     private CardRepository cardRepository;
