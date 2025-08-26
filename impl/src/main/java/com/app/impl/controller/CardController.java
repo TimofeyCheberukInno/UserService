@@ -56,12 +56,6 @@ public class CardController {
 
 	@GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-	public CardDto getCardById(@PathVariable @Positive Long id) {
-		return cardService.findById(id);
-	}
-
-	@GetMapping("/{id}/with-user")
-    @ResponseStatus(HttpStatus.OK)
 	public CardWithUserDto getCardWithUserById(@PathVariable @Positive Long id) {
 		return cardService.findByIdWithUser(id);
 	}

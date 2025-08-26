@@ -234,72 +234,8 @@ public class CardServiceTest {
     }
 
     @Nested
-    @DisplayName("Tests for findById(Long id) and findByIdWithUser(Long id)")
+    @DisplayName("Tests for findByIdWithUser(Long id)")
     class findByIdTests {
-        @Test
-        @DisplayName("returns card by id from cache")
-        void shouldReturnCardByIdFromCache() {
-            Mockito.when(cardCacheService.getByIdWithoutUser(CARD_ENTITY_ID))
-                    .thenReturn(Optional.of(getCardDto()));
-
-            CardDto expectedValue = getCardDto();
-
-            CardDto actualValue = cardService.findById(CARD_ENTITY_ID);
-
-            assertThat(actualValue).isEqualTo(expectedValue);
-
-            Mockito.verify(cardCacheService, Mockito.times(1))
-                    .getByIdWithoutUser(CARD_ENTITY_ID);
-            Mockito.verify(cardRepository, Mockito.never())
-                    .findById(Mockito.any());
-            Mockito.verify(cardMapper, Mockito.never())
-                    .toDto(Mockito.any());
-        }
-
-        @Test
-        @DisplayName("returns card by id from DB")
-        void shouldReturnCardByIdFromDB() {
-            Mockito.when(cardCacheService.getByIdWithoutUser(CARD_ENTITY_ID))
-                    .thenReturn(Optional.empty());
-            Mockito.when(cardRepository.findById(CARD_ENTITY_ID))
-                    .thenReturn(Optional.of(getCreatedCardEntity()));
-            Mockito.when(cardMapper.toDto(getCreatedCardEntity()))
-                    .thenReturn(getCardDto());
-
-            CardDto expectedValue = getCardDto();
-
-            CardDto actualValue = cardService.findById(CARD_ENTITY_ID);
-
-            assertThat(actualValue).isEqualTo(expectedValue);
-
-            Mockito.verify(cardCacheService, Mockito.times(1))
-                    .getByIdWithoutUser(CARD_ENTITY_ID);
-            Mockito.verify(cardRepository, Mockito.times(1))
-                    .findById(CARD_ENTITY_ID);
-            Mockito.verify(cardMapper, Mockito.times(1))
-                    .toDto(getCreatedCardEntity());
-        }
-
-        @Test
-        @DisplayName("throws CardNotFoundException")
-        void shouldThrowCardNotFoundException() {
-            Mockito.when(cardCacheService.getByIdWithoutUser(CARD_ENTITY_ID))
-                    .thenReturn(Optional.empty());
-            Mockito.when(cardRepository.findById(CARD_ENTITY_ID))
-                    .thenReturn(Optional.empty());
-
-            Assertions.assertThatExceptionOfType(CardNotFoundException.class)
-                    .isThrownBy(() -> cardService.findById(CARD_ENTITY_ID))
-                    .withMessage(CARD_NOT_FOUND_BY_ID_MSG, CARD_ENTITY_ID);
-
-            Mockito.verify(cardCacheService, Mockito.times(1))
-                    .getByIdWithoutUser(CARD_ENTITY_ID);
-            Mockito.verify(cardRepository, Mockito.times(1))
-                    .findById(CARD_ENTITY_ID);
-            Mockito.verify(cardMapper, Mockito.never())
-                    .toDto(Mockito.any());
-        }
-
         @Test
         @DisplayName("returns card by id with user from cache")
         void shouldReturnCardByIdWithUserFromCache() {

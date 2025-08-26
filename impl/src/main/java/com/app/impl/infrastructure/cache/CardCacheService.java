@@ -52,17 +52,6 @@ public class CardCacheService {
 		log.info("Updating cache for {} with id {}...", CARDS_WITH_USER_CACHE_NAME, card.id());
 	}
 
-	public Optional<CardDto> getByIdWithoutUser(Long id) {
-		Object object = redisTemplate.opsForValue().get(makeKey(CARDS_CACHE_NAME, id));
-		if (object instanceof CardDto) {
-			log.info("Cache hit for {} with id {}!", CARDS_CACHE_NAME, id);
-			return Optional.of((CardDto) object);
-		}
-		log.info("Cache miss for {} with id {}!", CARDS_CACHE_NAME, id);
-
-		return Optional.empty();
-	}
-
 	public Optional<CardWithUserDto> getByIdWithUser(Long id) {
 		Object object = redisTemplate.opsForValue().get(makeKey(CARDS_WITH_USER_CACHE_NAME, id));
 		if (object instanceof CardWithUserDto) {
