@@ -92,20 +92,6 @@ public class CardServiceImpl implements CardService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public CardDto findById(Long id) {
-		Optional<CardDto> cachedCard = cacheService.getByIdWithoutUser(id);
-		if (cachedCard.isPresent()) {
-			return cachedCard.get();
-		}
-
-		Card card = cardRepository.findById(id)
-                .orElseThrow(() -> new CardNotFoundException(String.format(CARD_NOT_FOUND_BY_ID_MSG, id)));
-
-		return cardMapper.toDto(card);
-	}
-
-	@Override
-	@Transactional(readOnly = true)
 	public CardWithUserDto findByIdWithUser(Long id) {
 		Optional<CardWithUserDto> cachedCard = cacheService.getByIdWithUser(id);
         if (cachedCard.isPresent()) {
