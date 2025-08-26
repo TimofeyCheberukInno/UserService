@@ -4,6 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 
+// TODO: add cache config profile for IT
+// TODO: implement IT for controller(validation, constraints, etc)
+// TODO: implement IT for cache services
 // TODO: Logs
 
 @SpringBootApplication
