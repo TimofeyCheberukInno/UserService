@@ -18,7 +18,6 @@ import com.app.impl.entity.Card;
 import com.app.impl.integration.support.card.CardITSupport;
 import com.app.impl.repository.CardRepository;
 
-
 @SpringBootTest
 @Profile("jpa")
 public class CardRepositoryIT {
@@ -110,7 +109,7 @@ public class CardRepositoryIT {
             assertThat(actualValues.size()).isEqualTo(expectedValues.size());
             assertThat(actualValues).isEqualTo(expectedValues);
         }
-        
+
         @Test
         @DisplayName("returns empty list of cards because receives empty list")
         void shouldReturnEmptyListBecauseReceivesEmptyList() {

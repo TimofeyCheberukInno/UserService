@@ -22,7 +22,12 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "card_info", indexes = {@Index(name = "idx_user_id", columnList = "user_id")})
+@Table(
+        name = "card_info",
+        indexes = {
+                @Index(name = "idx_user_id", columnList = "user_id")
+        }
+)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

@@ -24,7 +24,10 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email")
+@NamedQuery(
+        name = "User.findByEmail",
+        query = "SELECT u FROM User u WHERE u.email = :email"
+)
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
