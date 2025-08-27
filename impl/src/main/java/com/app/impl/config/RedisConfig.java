@@ -29,6 +29,7 @@ public class RedisConfig {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
 		objectMapper.findAndRegisterModules();
+		objectMapper.findAndRegisterModules();
 
 		BasicPolymorphicTypeValidator ptv = BasicPolymorphicTypeValidator.builder().allowIfSubType("com.app.impl.dto")
 				.allowIfSubType("com.app.impl.entity").allowIfSubType("java.lang").allowIfSubType("java.time").build();

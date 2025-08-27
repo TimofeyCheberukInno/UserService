@@ -67,16 +67,14 @@ public class CardITSupport {
     public Card getCardToUpdate() {
         Card card = createUserAndCard();
 
-        Card cardToUpdate = new Card(
+        return new Card(
                 card.getId(),
                 null,
                 null,
                 null,
-                "UPDATE_NAME_1 UPDATED_SURNAME_1",
+                "UPDATED_NAME_1 UPDATED_SURNAME_1",
                 null
         );
-
-        return cardToUpdate;
     }
 
     public Card getCardToUpdateWithoutCreation() {
@@ -85,7 +83,7 @@ public class CardITSupport {
                 null,
                 null,
                 null,
-                "UPDATE_NAME_1 UPDATED_SURNAME_1",
+                "UPDATED_NAME_1 UPDATED_SURNAME_1",
                 null
         );
     }

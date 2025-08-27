@@ -5,38 +5,32 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.time.LocalDate;
 
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.data.redis.DataRedisTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ActiveProfiles;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import com.app.impl.config.RedisConfig;
-import com.app.impl.integration.config.RedisTestContainersConfig;
 import com.app.impl.entity.User;
 import com.app.impl.infrastructure.cache.UserCacheService;
 
-@SpringBootTest(classes = {
+@DataRedisTest
+@Import({
         UserCacheService.class,
-        User.class,
+        RedisConfig.class
 })
-@Import({RedisTestContainersConfig.class, RedisConfig.class})
-@ActiveProfiles("redis")
-@EnableAutoConfiguration(exclude = org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration.class)
-public class UserCacheServiceIT {
+public class UserCacheServiceIT extends BaseRedisTest {
     @Autowired
     private UserCacheService cacheService;
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
     private static final String USERS_CACHE_PREFIX = "users" + ":";
-
 
     @BeforeEach
     void setUp() {
@@ -53,11 +47,11 @@ public class UserCacheServiceIT {
         @DisplayName("saves user in cache")
         void shouldPutUserInCache() {
             User user = new User(
-                    null,
-                    "NAME_2",
-                    "SURNAME_2",
+                    1L,
+                    "NAME_1",
+                    "SURNAME_1",
                     LocalDate.of(2007, 10, 13),
-                    "example_2@gmail.com"
+                    "example_1@gmail.com"
             );
             cacheService.save(user);
 

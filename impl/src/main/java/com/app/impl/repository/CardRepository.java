@@ -20,13 +20,13 @@ public interface CardRepository extends JpaRepository<Card, Long> {
 	Optional<Card> findByIdWithUser(@Param("id") Long id);
 
     @Transactional
-	@Modifying
-	@Query("UPDATE Card с " +
-            "SET с.cardHolderName = :#{#card.cardHolderName} " +
-            "WHERE с.id = :#{#card.id}")
-	int updateCard(@Param("card") Card card);
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE Card c " +
+            "SET c.cardHolderName = :#{#card.cardHolderName} " +
+            "WHERE c.id = :#{#card.id}")
+    int updateCard(@Param("card") Card card);
 
-	@Query("SELECT c FROM Card c WHERE c.id IN :ids")
+    @Query("SELECT c FROM Card c WHERE c.id IN :ids")
 	List<Card> findAllByIds(@Param("ids") Collection<Long> ids);
 
 	@Query("SELECT c FROM Card c JOIN FETCH c.user u WHERE c.id IN :ids")
