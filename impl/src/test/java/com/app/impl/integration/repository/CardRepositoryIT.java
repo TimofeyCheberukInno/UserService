@@ -10,17 +10,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
 import com.app.impl.repository.UserRepository;
 import com.app.impl.entity.Card;
 import com.app.impl.integration.support.CardITSupport;
 import com.app.impl.repository.CardRepository;
-import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest
-@ActiveProfiles("jpa")
-public class CardRepositoryIT {
+@DataJpaTest
+@Import({ CardITSupport.class })
+public class CardRepositoryIT extends BaseDBTest {
     @Autowired
     private CardRepository cardRepository;
     @Autowired
