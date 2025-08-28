@@ -8,6 +8,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.app.impl.dto.cardDtos.CardCreateDto;
+import com.app.impl.dto.cardDtos.CardUpdateDto;
 import com.app.impl.repository.UserRepository;
 import com.app.impl.entity.User;
 import com.app.impl.entity.Card;
@@ -56,7 +58,7 @@ public class CardITSupport {
                 null,
                 createdUser.getId(),
                 createdUser,
-                "4263 9896 7641 8534",
+                "4263989676418534",
                 "NAME_2 SURNAME_2",
                 LocalDate.of(2027, 2, 1)
         );
@@ -93,5 +95,46 @@ public class CardITSupport {
         Card card2 = createSecondPairOfUserAndCard();
 
         return new ArrayList<Card>(Arrays.asList(card1, card2));
+    }
+
+    public CardCreateDto createUserAndCardCreateDto() {
+        User user = new User(
+                null,
+                "NAME_1",
+                "SURNAME_1",
+                LocalDate.of(2005, 5, 13),
+                "example@gmail.com"
+        );
+        User createdUser = userRepository.save(user);
+
+        return new CardCreateDto(
+                user.getId(),
+                "4485908119420396",
+                "NAME_1 SURNAME_1",
+                LocalDate.of(2035, 5, 13)
+        );
+    }
+
+    public CardCreateDto createInvalidCardCreateDto() {
+        return new CardCreateDto(
+                1L,
+                "4485908119420396",
+                "NAME_1 SURNAME_1",
+                LocalDate.of(2005, 5, 13)
+        );
+    }
+
+    public CardUpdateDto createCardUpdateDto(Long id) {
+        return new CardUpdateDto(
+                id,
+                "UPDATED_NAME_1 UPDATED_SURNAME_1"
+        );
+    }
+
+    public CardUpdateDto createInvalidCardUpdateDto() {
+        return new CardUpdateDto(
+                -1L,
+                "UPDATED_NAME_1 UPDATED_SURNAME_1"
+        );
     }
 }

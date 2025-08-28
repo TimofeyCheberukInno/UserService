@@ -51,8 +51,8 @@ public class UserControllerIT extends BaseControllerTest {
     }
 
     @Nested
-    @DisplayName("Tests for createUser(UserCreateDto dto)")
-    class createUserTests {
+    @DisplayName("Integration tests for createUser(UserCreateDto dto)")
+    class createUserIT {
         @Test
         @DisplayName("returns 201 status")
         void shouldReturnCreatedUser() throws Exception {
@@ -79,6 +79,10 @@ public class UserControllerIT extends BaseControllerTest {
             assertThat(userByEmail).isPresent();
 
             assertThat(userById.get()).isEqualTo(userByEmail.get());
+            assertThat(userById.get().getName()).isEqualTo(dto.name());
+            assertThat(userById.get().getSurname()).isEqualTo(dto.surname());
+            assertThat(userById.get().getBirthDate()).isEqualTo(dto.birthDate());
+            assertThat(userById.get().getEmail()).isEqualTo(dto.email());
         }
 
         @Test
@@ -103,8 +107,8 @@ public class UserControllerIT extends BaseControllerTest {
     }
 
     @Nested
-    @DisplayName("Tests for updateUser(UpdateUserDto dto)")
-    class updateUserTests {
+    @DisplayName("Integration tests for updateUser(UpdateUserDto dto)")
+    class updateUserIT {
         @Test
         @DisplayName("returns 200 status")
         void shouldReturnAmountOfUpdatedUsers() throws Exception {
@@ -124,6 +128,9 @@ public class UserControllerIT extends BaseControllerTest {
             assertThat(userByEmail).isPresent();
 
             assertThat(userById.get()).isEqualTo(userByEmail.get());
+            assertThat(userById.get().getName()).isEqualTo(dto.name());
+            assertThat(userById.get().getSurname()).isEqualTo(dto.surname());
+            assertThat(userById.get().getEmail()).isEqualTo(dto.email());
         }
 
         @Test
@@ -148,11 +155,11 @@ public class UserControllerIT extends BaseControllerTest {
     }
 
     @Nested
-    @DisplayName("Tests for deleteUser(Long id)")
-    class deleteUserTests {
+    @DisplayName("Integration tests for deleteUser(Long id)")
+    class deleteUserIT {
         @Test
         @DisplayName("returns 200 status")
-        void shouldReturnCreatedUser() throws Exception {
+        void shouldDeleteUser() throws Exception {
             User user = support.createUser();
 
             mockMvc.perform(delete("/api/users/" + user.getId()))
@@ -185,8 +192,8 @@ public class UserControllerIT extends BaseControllerTest {
     }
 
     @Nested
-    @DisplayName("Tests for getUserById(Long id)")
-    class getUserByIdTests {
+    @DisplayName("Integration tests for getUserById(Long id)")
+    class getUserByIdIT {
         @Test
         @DisplayName("returns 200 status")
         void shouldReturnUserById() throws Exception {
@@ -225,8 +232,8 @@ public class UserControllerIT extends BaseControllerTest {
     }
 
     @Nested
-    @DisplayName("Tests for getUserByEmail(String email)")
-    class getUserByEmailTests {
+    @DisplayName("Integration tests for getUserByEmail(String email)")
+    class getUserByEmailIT {
         @Test
         @DisplayName("returns 200 status")
         void shouldReturnUserByEmail() throws Exception {
@@ -268,8 +275,8 @@ public class UserControllerIT extends BaseControllerTest {
     }
 
     @Nested
-    @DisplayName("Tests for getListOfUsersByIds(List<Long> ids)")
-    class getListOfUsersByIdsTests {
+    @DisplayName("Integration tests for getListOfUsersByIds(List<Long> ids)")
+    class getListOfUsersByIdsIT {
         @Test
         @DisplayName("returns 200 status")
         void shouldReturnUsersByIds() throws Exception {
@@ -321,8 +328,8 @@ public class UserControllerIT extends BaseControllerTest {
     }
 
     @Nested
-    @DisplayName("Tests for getAll()")
-    class getAllTests {
+    @DisplayName("Integration tests for getAll()")
+    class getAllIT {
         @Test
         @DisplayName("returns 200 status")
         void shouldReturnAllUsers() throws Exception {
