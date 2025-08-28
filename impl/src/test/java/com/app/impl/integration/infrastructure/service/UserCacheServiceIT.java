@@ -37,8 +37,8 @@ public class UserCacheServiceIT extends BaseRedisTest {
     }
 
     @Nested
-    @DisplayName("Tests for save(User user) and update(User user)")
-    class saveAndUpdateTests {
+    @DisplayName("Integration tests for save(User user) and update(User user)")
+    class saveAndUpdateIT {
         @Test
         @DisplayName("saves user in cache")
         void shouldPutUserInCache() {

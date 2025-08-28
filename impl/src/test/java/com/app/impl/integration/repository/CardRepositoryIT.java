@@ -35,8 +35,8 @@ public class CardRepositoryIT extends BaseDBTest {
     }
 
     @Nested
-    @DisplayName("Tests for findByIdWithUser(Long id)")
-    class findByIdWithUserTests {
+    @DisplayName("Integration tests for findByIdWithUser(Long id)")
+    class findByIdWithUserIT {
         @Test
         @DisplayName("returns card with user by id")
         void shouldReturnCardWithUserById() {
@@ -59,8 +59,8 @@ public class CardRepositoryIT extends BaseDBTest {
     }
 
     @Nested
-    @DisplayName("Tests for updateCard(Card card)")
-    class updateCardTests {
+    @DisplayName("Integration tests for updateCard(Card card)")
+    class updateCardIT {
         @Test
         @DisplayName("returns amount of updated cards")
         void shouldReturnAmountOfUpdatedCards () {
@@ -87,8 +87,8 @@ public class CardRepositoryIT extends BaseDBTest {
     }
 
     @Nested
-    @DisplayName("Tests for findAllByIds(Collection<Long> ids) and findAllByIdsWithUser(Collection<Long> ids)")
-    class findAllByIdsTests {
+    @DisplayName("Integration tests for findAllByIds(Collection<Long> ids) and findAllByIdsWithUser(Collection<Long> ids)")
+    class findAllByIdsIT {
         @Test
         @DisplayName("returns list of cards")
         void shouldReturnListOfCards() {
@@ -187,8 +187,8 @@ public class CardRepositoryIT extends BaseDBTest {
     }
 
     @Nested
-    @DisplayName("Tests for findAllWithUser()")
-    class findAllWithUserTests {
+    @DisplayName("Integration tests for findAllWithUser()")
+    class findAllWithUserIT {
         @Test
         @DisplayName("returns list of cards")
         void shouldReturnListOfCards() {

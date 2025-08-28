@@ -33,8 +33,8 @@ public class UserRepositoryIT extends BaseDBTest {
     }
 
     @Nested
-    @DisplayName("Tests for findByEmail(String email)")
-    class findByEmailTests {
+    @DisplayName("Integration tests for findByEmail(String email)")
+    class findByEmailIT {
         @Test
         @DisplayName("return user by email")
         void shouldReturnUserByEmail() {
@@ -68,8 +68,8 @@ public class UserRepositoryIT extends BaseDBTest {
     }
 
     @Nested
-    @DisplayName("Tests for updateUser(User user)")
-    class updateUserTests {
+    @DisplayName("Integration tests for updateUser(User user)")
+    class updateUserIT {
         @Test
         @DisplayName("returns amount of updated users")
         void shouldReturnUpdatedUser() {
@@ -121,8 +121,8 @@ public class UserRepositoryIT extends BaseDBTest {
     }
 
     @Nested
-    @DisplayName("Tests for findAllByIds(Collection<Long> ids")
-    class findAllByIdsTests {
+    @DisplayName("Integration tests for findAllByIds(Collection<Long> ids")
+    class findAllByIdsIT {
         @Test
         @DisplayName("returns list of users")
         void shouldReturnListOfUsers() {

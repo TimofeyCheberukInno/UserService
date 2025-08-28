@@ -62,13 +62,13 @@ public class CardController {
 
 	@GetMapping("/by-ids")
     @ResponseStatus(HttpStatus.OK)
-	public List<CardDto> getListOfCardsById(@RequestParam @Valid List<@Positive Long> ids) {
+	public List<CardDto> getListOfCardsByIds(@RequestParam @Valid List<@Positive Long> ids) {
 		return cardService.findByIds(ids);
 	}
 
 	@GetMapping("/by-ids/with-user")
     @ResponseStatus(HttpStatus.OK)
-	public List<CardWithUserDto> getListOfCardsWithUserById(@RequestParam @Valid List<@Positive Long> ids) {
+	public List<CardWithUserDto> getListOfCardsWithUserByIds(@RequestParam @Valid List<@Positive Long> ids) {
 		return cardService.findByIdsWithUser(ids);
 	}
 
