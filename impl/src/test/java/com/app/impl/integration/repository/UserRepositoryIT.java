@@ -50,7 +50,7 @@ public class UserRepositoryIT extends BaseDBTest {
         @Test
         @DisplayName("return Optional.empty() because no existing user with email")
         void shouldReturnEmptyOptional() {
-            Optional<User> actualValue = userRepository.findByEmail("mamama@gmail.com");
+            Optional<User> actualValue = userRepository.findByEmail("non-existent@gmail.com");
 
             assertThat(actualValue).isEmpty();
         }
