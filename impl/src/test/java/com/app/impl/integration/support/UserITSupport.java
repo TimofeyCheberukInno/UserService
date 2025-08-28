@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.app.impl.dto.userDtos.UserCreateDto;
+import com.app.impl.dto.userDtos.UserUpdateDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -116,5 +118,41 @@ public class UserITSupport {
         User createdUser = userRepository.save(user2);
 
         return new ArrayList<>(Arrays.asList(user1, createdUser));
+    }
+
+    public UserCreateDto createUserCreateDto() {
+        return new UserCreateDto(
+                "NAME_1",
+                "SURNAME_1",
+                LocalDate.of(2005, 5, 13),
+                "example@gmail.com"
+        );
+    }
+
+    public UserCreateDto createInvalidUserCreateDto() {
+        return new UserCreateDto(
+                "NAME_1",
+                "SURNAME_1",
+                LocalDate.of(2030, 5, 13),
+                "example@gmail.com"
+        );
+    }
+
+    public UserUpdateDto createUserUpdateDto(Long id) {
+        return new UserUpdateDto(
+                id,
+                "UPDATED_NAME_1",
+                "UPDATED_SURNAME_1",
+                "updated_example@gmail.com"
+        );
+    }
+
+    public UserUpdateDto createInvalidUserUpdateDto() {
+        return new UserUpdateDto(
+                1L,
+                "UPDATED_NAME_1",
+                "UPDATED_SURNAME_1",
+                "updated"
+        );
     }
 }

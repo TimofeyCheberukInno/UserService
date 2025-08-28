@@ -14,7 +14,8 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.NotBlank;
 
-public record UserUpdateDto(
+public record
+UserUpdateDto(
         @Positive
         Long id,
 
