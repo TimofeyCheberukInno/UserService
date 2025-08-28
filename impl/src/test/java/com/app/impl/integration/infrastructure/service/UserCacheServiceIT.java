@@ -34,10 +34,7 @@ public class UserCacheServiceIT extends BaseRedisTest {
 
     @BeforeEach
     void setUp() {
-        redisTemplate.execute((RedisCallback<Object>) connection -> {
-            connection.serverCommands().flushDb();
-            return null;
-        });
+        cacheService.deleteAll();
     }
 
     @Nested
