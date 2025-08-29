@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.test.annotation.DirtiesContext;
 
 import com.app.impl.integration.support.UserITSupport;
 import com.app.impl.entity.User;
@@ -21,6 +22,7 @@ import com.app.impl.repository.UserRepository;
 
 @DataJpaTest
 @Import({ UserITSupport.class })
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class UserRepositoryIT extends BaseDBTest {
     @Autowired
     private UserRepository userRepository;
