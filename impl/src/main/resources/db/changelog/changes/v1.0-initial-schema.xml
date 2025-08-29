@@ -5,7 +5,6 @@
                       https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
         <changeSet id="create_users_table" author="Tsimafei Chabiaruk">
-
             <createTable tableName="users">
                 <column name="id" type="bigserial" autoIncrement="true">
                     <constraints primaryKey="true" nullable="false"/>

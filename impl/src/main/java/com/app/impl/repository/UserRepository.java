@@ -1,9 +1,10 @@
 package com.app.impl.repository;
 
 import java.util.Collection;
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
 
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,16 +15,17 @@ import com.app.impl.entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByEmail(@Param("email") String email);
+	Optional<User> findByEmail(@Param("email") String email);
 
-    @Modifying
-    @Query("UPDATE User u " +
+    @Transactional
+    @Modifying(clearAutomatically = true)
+	@Query("UPDATE User u " +
             "SET u.name = :#{#updateUser.name}, " +
             "u.surname = :#{#updateUser.surname}, " +
             "u.email = :#{#updateUser.email} " +
             "WHERE u.id = :#{#updateUser.id} ")
-    int updateUser(@Param("updateUser") User user);
+	int updateUser(@Param("updateUser") User user);
 
-    @Query("SELECT u FROM User u WHERE u.id IN :ids")
-    List<User> findAllByIds(@Param("ids") Collection<Long> ids);
+	@Query("SELECT u FROM User u WHERE u.id IN :ids")
+	List<User> findAllByIds(@Param("ids") Collection<Long> ids);
 }

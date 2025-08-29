@@ -4,93 +4,77 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
+
+import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.app.impl.dto.userDtos.UserUpdateDto;
 import com.app.impl.dto.userDtos.UserCreateDto;
 import com.app.impl.dto.userDtos.UserDto;
+import com.app.impl.dto.userDtos.UserUpdateDto;
 import com.app.impl.service.UserService;
 
 @RestController
 @RequestMapping("/api/users")
 @Validated
 public class UserController {
-    private final UserService userService;
+	private final UserService userService;
 
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+	@Autowired
+	public UserController(UserService userService) {
+		this.userService = userService;
+	}
 
-    @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody @Valid UserCreateDto createDto){
-        UserDto dto = userService.create(createDto);
-        return new ResponseEntity<>(
-                dto,
-                HttpStatus.CREATED
-        );
-    }
+	@PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+	public UserDto createUser(@RequestBody @Valid UserCreateDto createDto) {
+		return userService.create(createDto);
+	}
 
-    @PutMapping
-    public ResponseEntity<Integer> updateUser(@RequestBody @Valid UserUpdateDto updateDto){
-        int countOfUpdatedEntities = userService.update(updateDto);
-        return new ResponseEntity<>(
-                countOfUpdatedEntities,
-                HttpStatus.OK
-        );
-    }
+	@PutMapping
+    @ResponseStatus(HttpStatus.OK)
+	public int updateUser(@RequestBody @Valid UserUpdateDto updateDto) {
+		return userService.update(updateDto);
+	}
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id){
-        userService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+	@DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deleteUser(@PathVariable @Positive Long id) {
+		userService.delete(id);
+	}
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable Long id){
-        UserDto dto = userService.findById(id);
-        return new ResponseEntity<>(
-                dto,
-                HttpStatus.OK
-        );
-    }
+	@GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+	public UserDto getUserById(@PathVariable @Positive Long id) {
+		return userService.findById(id);
+	}
 
-    @GetMapping("/by-email")
-    public ResponseEntity<UserDto> getUserByEmail(@RequestParam @Email String email){
-        UserDto dto = userService.findByEmail(email);
-        return new ResponseEntity<>(
-                dto,
-                HttpStatus.OK
-        );
-    }
+	@GetMapping("/by-email")
+    @ResponseStatus(HttpStatus.OK)
+	public UserDto getUserByEmail(@RequestParam @Email String email) {
+		return userService.findByEmail(email);
+	}
 
-    @GetMapping("/by-ids")
-    public ResponseEntity<List<UserDto>> getListOfUsersByIds(@RequestParam List<Long> ids){
-        List<UserDto> dtos = userService.findByIds(ids);
-        return new ResponseEntity<>(
-                dtos,
-                HttpStatus.OK
-        );
-    }
+	@GetMapping("/by-ids")
+    @ResponseStatus(HttpStatus.OK)
+	public List<UserDto> getListOfUsersByIds(@RequestParam @Valid List<@Positive Long> ids) {
+		return userService.findByIds(ids);
+	}
 
-    @GetMapping
-    public ResponseEntity<List<UserDto>> getAll(){
-        List<UserDto> dtos = userService.findAll();
-        return new ResponseEntity<>(
-                dtos,
-                HttpStatus.OK
-        );
-    }
+	@GetMapping
+    @ResponseStatus(HttpStatus.OK)
+	public List<UserDto> getAll() {
+		return userService.findAll();
+	}
 }

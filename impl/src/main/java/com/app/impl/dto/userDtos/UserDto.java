@@ -8,5 +8,4 @@ public record UserDto(
         String surname,
         LocalDate birthDate,
         String email
-) {
-}
+) { }

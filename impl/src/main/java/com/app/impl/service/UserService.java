@@ -8,11 +8,11 @@ import com.app.impl.dto.userDtos.UserDto;
 import com.app.impl.dto.userDtos.UserUpdateDto;
 
 public interface UserService {
-    UserDto create(UserCreateDto userCreateDto);
-    int update(UserUpdateDto userUpdateDto);
-    void delete(Long id);
-    UserDto findById(Long id);
-    UserDto findByEmail(String email);
-    List<UserDto> findByIds(Collection<Long> ids);
-    List<UserDto> findAll();
+	UserDto create(UserCreateDto userCreateDto);
+	int update(UserUpdateDto userUpdateDto);
+	void delete(Long id);
+	UserDto findById(Long id);
+	UserDto findByEmail(String email);
+	List<UserDto> findByIds(Collection<Long> ids);
+	List<UserDto> findAll();
 }
