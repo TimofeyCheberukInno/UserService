@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 
 import com.app.impl.config.RedisConfig;
 import com.app.impl.entity.User;
@@ -24,6 +25,7 @@ import com.app.impl.infrastructure.cache.UserCacheService;
         UserCacheService.class,
         RedisConfig.class
 })
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class UserCacheServiceIT extends BaseRedisTest {
     @Autowired
     private UserCacheService cacheService;

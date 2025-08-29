@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.annotation.DirtiesContext;
 
 import com.app.impl.repository.UserRepository;
 import com.app.impl.entity.Card;
@@ -20,6 +21,7 @@ import com.app.impl.repository.CardRepository;
 
 @DataJpaTest
 @Import({ CardITSupport.class })
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class CardRepositoryIT extends BaseDBTest {
     @Autowired
     private CardRepository cardRepository;
