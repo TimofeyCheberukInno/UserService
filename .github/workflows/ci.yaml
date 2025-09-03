@@ -21,6 +21,7 @@ jobs:
         java-version: '24'
         distribution: 'temurin'
         cache: maven
+        cache-dependency-path: ./impl/pom.xml
 
     - name: Build project
       id: build
@@ -46,6 +47,7 @@ jobs:
         java-version: '24'
         distribution: 'temurin'
         cache: maven
+        cache-dependency-path: ./impl/pom.xml
 
     - name: Download compiled classes
       uses: actions/download-artifact@v4
