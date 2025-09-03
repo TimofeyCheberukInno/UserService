@@ -3,6 +3,8 @@ name: User Service CI Pipeline
 on:
   push:
     branches: [ main, ci-pipeline ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   build:
