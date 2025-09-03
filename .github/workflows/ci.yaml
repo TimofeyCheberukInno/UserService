@@ -1,12 +1,15 @@
 name: User Service CI Pipeline
 
 on:
-  push: [ main, ci-pipeline ]
+  push:
+    branches: [ main, ci-pipeline ]
 
 jobs:
   build:
     name: Build
     runs-on: windows-latest
+    outputs:
+      build-status: ${{ steps.build.outcome }}
 
     steps:
     - name: Checkout code from repository
@@ -29,7 +32,6 @@ jobs:
         name: compiled-classes
         path: target/classes
 
-
   tests:
     name: Testing
     runs-on: windows-latest
@@ -37,9 +39,6 @@ jobs:
     if: needs.build.outputs.build-status == 'success'
 
     steps:
-    - name: Checkout code from repository
-      uses: actions/checkout@v4
-
     - name: JDK setup
       uses: actions/setup-java@v3
       with:
@@ -48,7 +47,7 @@ jobs:
         cache: maven
 
     - name: Download compiled classes
-      uses: actions/download-actifact@v3
+      uses: actions/download-artifact@v3  # Исправлено: download-artifact
       with:
         name: compiled-classes
         path: target/classes
