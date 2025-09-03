@@ -1,0 +1,64 @@
+name: User Service CI Pipeline
+
+on:
+  push: [ main, ci-pipeline ]
+
+jobs:
+  build:
+    name: Build
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code from repository
+      uses: actions/checkout@v4
+
+    - name: JDK setup
+      uses: actions/setup-java@v3
+      with:
+        java-version: '24'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Build project
+      id: build
+      run: mvn compile -q -DskipTests
+
+    - name: Upload compiled classes
+      uses: actions/upload-artifact@v3
+      with:
+        name: compiled-classes
+        path: target/classes
+
+
+  tests:
+    name: Testing
+    runs-on: windows-latest
+    needs: build
+    if: needs.build.outputs.build-status == 'success'
+
+    steps:
+    - name: Checkout code from repository
+      uses: actions/checkout@v4
+
+    - name: JDK setup
+      uses: actions/setup-java@v3
+      with:
+        java-version: '24'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Download compiled classes
+      uses: actions/download-actifact@v3
+      with:
+        name: compiled-classes
+        path: target/classes
+
+    - name: Run tests
+      run: mvn test
+
+    - name: Upload test reports
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: tests-results
+        path: target/surefire-reports/
