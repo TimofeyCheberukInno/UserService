@@ -32,8 +32,8 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: compiled-classes
-        path: target/classes
-
+        path: ./impl/target/classes
+        
   tests:
     name: Testing
     runs-on: windows-latest
@@ -53,7 +53,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: compiled-classes
-        path: target/classes
+        path: ./impl/target/classes
 
     - name: Run tests
       run: mvn test
@@ -64,4 +64,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: tests-results
-        path: target/surefire-reports/
+        path: ./impl/target/surefire-reports/
