@@ -59,7 +59,7 @@ jobs:
         path: ./impl/target/classes
 
     - name: Run tests
-      run: mvn test
+      run: mvn test -q
       working-directory: ./impl
 
     - name: Upload test reports
