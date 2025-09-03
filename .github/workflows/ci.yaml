@@ -41,6 +41,9 @@ jobs:
     if: needs.build.outputs.build-status == 'success'
 
     steps:
+    - name: Проверка кода из репозитория
+      uses: actions/checkout@v4
+  
     - name: JDK setup
       uses: actions/setup-java@v4
       with:
