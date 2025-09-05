@@ -35,8 +35,8 @@ public class CardRepositoryIT {
 
     @BeforeEach
     public void setUp() {
-        userRepository.deleteAll();
         cardRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Nested

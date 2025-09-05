@@ -63,10 +63,7 @@ jobs:
       with:
         name: compiled-classes
         path: ./impl/target/classes
-
-    - name: Wait for databases
-      run: sleep 10
-
+        
     - name: Tests with JaCoCo coverage
       run: mvn verify -q
       working-directory: ./impl
