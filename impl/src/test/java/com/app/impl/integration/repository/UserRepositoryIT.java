@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.app.impl.integration.config.TestContainersConfig;
@@ -26,6 +27,7 @@ import com.app.impl.repository.UserRepository;
 @DataJpaTest
 @Testcontainers
 @Import({ UserITSupport.class, TestContainersConfig.class })
+@ActiveProfiles("test")
 public class UserRepositoryIT {
     @Autowired
     private UserRepository userRepository;
