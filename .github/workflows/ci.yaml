@@ -65,7 +65,7 @@ jobs:
         path: ./impl/target/classes
 
     - name: Tests with JaCoCo coverage
-      run: mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent verify -q
+      run: mvn verify -q
       working-directory: ./impl
 
     - name: Upload test reports
