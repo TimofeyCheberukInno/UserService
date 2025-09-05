@@ -5,24 +5,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.annotation.DirtiesContext;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
+import com.app.impl.integration.config.TestContainersConfig;
 import com.app.impl.repository.UserRepository;
 import com.app.impl.entity.Card;
 import com.app.impl.integration.support.CardITSupport;
 import com.app.impl.repository.CardRepository;
 
+@Tag("repos")
 @DataJpaTest
-@Import({ CardITSupport.class })
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-public class CardRepositoryIT extends BaseDBTest {
+@Testcontainers
+@Import({ CardITSupport.class, TestContainersConfig.class })
+public class CardRepositoryIT {
     @Autowired
     private CardRepository cardRepository;
     @Autowired
