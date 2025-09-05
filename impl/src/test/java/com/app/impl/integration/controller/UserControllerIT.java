@@ -12,20 +12,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.app.impl.integration.config.TestContainersConfig;
 import com.app.impl.dto.userDtos.UserDto;
 import com.app.impl.entity.User;
 import com.app.impl.integration.support.UserITSupport;
@@ -34,10 +37,12 @@ import com.app.impl.dto.userDtos.UserCreateDto;
 import com.app.impl.infrastructure.cache.UserCacheService;
 import com.app.impl.repository.UserRepository;
 
+@Tag("controllers")
 @SpringBootTest
+@Testcontainers
 @AutoConfigureMockMvc
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-public class UserControllerIT extends BaseControllerTest {
+@Import({ TestContainersConfig.class })
+public class UserControllerIT{
     @Autowired
     private MockMvc mockMvc;
     @Autowired

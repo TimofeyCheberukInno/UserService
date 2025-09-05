@@ -12,20 +12,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.app.impl.integration.config.TestContainersConfig;
 import com.app.impl.dto.cardDtos.CardWithUserDto;
 import com.app.impl.entity.Card;
 import com.app.impl.dto.cardDtos.CardUpdateDto;
@@ -36,10 +39,12 @@ import com.app.impl.integration.support.CardITSupport;
 import com.app.impl.repository.CardRepository;
 import com.app.impl.repository.UserRepository;
 
+@Tag("controllers")
 @SpringBootTest
+@Testcontainers
 @AutoConfigureMockMvc
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-public class CardControllerIT extends BaseControllerTest {
+@Import({ TestContainersConfig.class })
+public class CardControllerIT {
     @Autowired
     MockMvc mockMvc;
     @Autowired
@@ -69,8 +74,8 @@ public class CardControllerIT extends BaseControllerTest {
             CardCreateDto dto = support.createUserAndCardCreateDto();
 
             MvcResult result = mockMvc.perform(post("/api/cards")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(dto)))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(dto)))
                     .andExpect(status().isCreated())
                     .andExpect(jsonPath("$.id").exists())
                     .andExpect(jsonPath("$.userId").value(dto.userId()))
@@ -96,8 +101,8 @@ public class CardControllerIT extends BaseControllerTest {
             CardCreateDto dto = support.createInvalidCardCreateDto();
 
             mockMvc.perform(post("/api/cards")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(dto)))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(dto)))
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.message").exists());
         }
@@ -373,7 +378,7 @@ public class CardControllerIT extends BaseControllerTest {
                     .andExpect(jsonPath("$.length()").value(0));
         }
 
-         @Test
+        @Test
         @DisplayName("returns 200 status")
         void shouldReturnAllCardsWithUsers() throws Exception {
             List<Card> cards = support.createListOfCards();
@@ -410,3 +415,4 @@ public class CardControllerIT extends BaseControllerTest {
         }
     }
 }
+

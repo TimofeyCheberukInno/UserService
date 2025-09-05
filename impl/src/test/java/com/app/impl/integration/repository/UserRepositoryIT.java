@@ -6,24 +6,27 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.test.annotation.DirtiesContext;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
+import com.app.impl.integration.config.TestContainersConfig;
 import com.app.impl.integration.support.UserITSupport;
 import com.app.impl.entity.User;
 import com.app.impl.repository.UserRepository;
 
+@Tag("repos")
 @DataJpaTest
-@Import({ UserITSupport.class })
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-public class UserRepositoryIT extends BaseDBTest {
+@Testcontainers
+@Import({ UserITSupport.class, TestContainersConfig.class })
+public class UserRepositoryIT {
     @Autowired
     private UserRepository userRepository;
     @Autowired
