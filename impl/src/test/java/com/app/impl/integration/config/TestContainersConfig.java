@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Bean;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import com.redis.testcontainers.RedisContainer;
-i
 @TestConfiguration
 public class TestContainersConfig {
     @Bean
