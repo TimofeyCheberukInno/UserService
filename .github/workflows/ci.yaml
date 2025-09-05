@@ -14,8 +14,10 @@ jobs:
       build-status: ${{ steps.build.outcome }}
 
     steps:
-    - name: Checkout code from repository
+    - name: Checkout repository code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0 
       
     - name: JDK setup
       uses: actions/setup-java@v4
@@ -25,7 +27,7 @@ jobs:
         cache: maven
         cache-dependency-path: ./impl/pom.xml
 
-    - name: Build project
+    - name: Building project
       id: build
       run: mvn compile -q -DskipTests
       working-directory: ./impl
@@ -43,8 +45,10 @@ jobs:
     if: needs.build.outputs.build-status == 'success'
 
     steps:
-    - name: Проверка кода из репозитория
+    - name: Checkout repository code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0 
   
     - name: JDK setup
       uses: actions/setup-java@v4
@@ -54,14 +58,14 @@ jobs:
         cache: maven
         cache-dependency-path: ./impl/pom.xml
 
-    - name: Download compiled classes
+    - name: Downloading compiled classes
       uses: actions/download-artifact@v4
       with:
         name: compiled-classes
         path: ./impl/target/classes
 
-    - name: Run tests
-      run: mvn test -q
+    - name: Tests with JaCoCo coverage
+      run: mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent verify -q
       working-directory: ./impl
 
     - name: Upload test reports
@@ -70,3 +74,16 @@ jobs:
       with:
         name: tests-results
         path: ./impl/target/surefire-reports/
+
+    - name: SonarQube analysis
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      run: |
+        mvn sonar:sonar \
+          -Dsonar.projectKey=${{ github.repository }} \
+          -Dsonar.java.binaries=target/classes \
+          -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
+          -Dsonar.host.url=$SONAR_HOST_URL \
+          -Dsonar.login=$SONAR_TOKEN
+      working-directory: ./impl 
