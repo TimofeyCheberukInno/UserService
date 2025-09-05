@@ -44,27 +44,6 @@ jobs:
     needs: build
     if: needs.build.outputs.build-status == 'success'
     
-    services:
-      postgres:
-        image: postgres:17-alpine
-        env:
-          POSTGRES_USER: ${{ secrets.DB_USERNAME }}
-          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.DB_NAME }}
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-         
-      redis:
-        image: redis:7-alpine
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
     steps:
     - name: Checkout repository code
       uses: actions/checkout@v4
@@ -89,12 +68,6 @@ jobs:
       run: sleep 10
 
     - name: Tests with JaCoCo coverage
-      env:
-        SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${{ secrets.DB_NAME }}
-        SPRING_DATASOURCE_USERNAME: ${{ secrets.DB_USERNAME }}
-        SPRING_DATASOURCE_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        SPRING_REDIS_HOST: redis 
-        SPRING_REDIS_PORT: 6379
       run: mvn verify -q
       working-directory: ./impl
 
