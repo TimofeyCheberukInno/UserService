@@ -71,7 +71,7 @@ jobs:
       working-directory: ./impl
 
     - name: Generate JaCoCo report
-      run: mvn org.jacoco:jacoco-maven-plugin:report -q
+      run: mvn org.jacoco:jacoco-maven-plugin:report
       working-directory: ./impl
 
     - name: Upload test reports
@@ -111,7 +111,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: jacoco-report
-        path: ./impl/target/site/jacoco/jacoco.xml
+        path: ./impl/target/site/jacoco/
 
     - name: Cache SonarQube packages
       uses: actions/cache@v4
