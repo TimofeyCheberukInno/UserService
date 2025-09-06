@@ -82,11 +82,13 @@ jobs:
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
       run: |
         mvn sonar:sonar \
           -Dsonar.projectKey=${{ github.repository }} \
           -Dsonar.java.binaries=target/classes \
           -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
           -Dsonar.host.url=$SONAR_HOST_URL \
-          -Dsonar.login=$SONAR_TOKEN
+          -Dsonar.login=$SONAR_TOKEN \
+          -Dsonar.organization=$SONAR_ORGANIZATION
       working-directory: ./impl
