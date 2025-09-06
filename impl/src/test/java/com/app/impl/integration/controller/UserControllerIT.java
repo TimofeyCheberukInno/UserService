@@ -42,8 +42,8 @@ import com.app.impl.repository.UserRepository;
 @SpringBootTest
 @Testcontainers
 @AutoConfigureMockMvc
-@Import({ TestContainersConfig.class })
 @ActiveProfiles("test")
+@Import({ TestContainersConfig.class })
 public class UserControllerIT{
     @Autowired
     private MockMvc mockMvc;

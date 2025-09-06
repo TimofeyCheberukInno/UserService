@@ -25,8 +25,8 @@ import com.app.impl.repository.CardRepository;
 @Tag("repos")
 @DataJpaTest
 @Testcontainers
-@Import({ CardITSupport.class, TestContainersConfig.class })
 @ActiveProfiles("test")
+@Import({ CardITSupport.class, TestContainersConfig.class })
 public class CardRepositoryIT {
     @Autowired
     private CardRepository cardRepository;

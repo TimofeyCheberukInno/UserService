@@ -44,8 +44,8 @@ import com.app.impl.repository.UserRepository;
 @SpringBootTest
 @Testcontainers
 @AutoConfigureMockMvc
-@Import({ TestContainersConfig.class })
 @ActiveProfiles("test")
+@Import({ TestContainersConfig.class })
 public class CardControllerIT {
     @Autowired
     MockMvc mockMvc;

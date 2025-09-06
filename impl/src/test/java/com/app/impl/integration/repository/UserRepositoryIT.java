@@ -26,8 +26,8 @@ import com.app.impl.repository.UserRepository;
 @Tag("repos")
 @DataJpaTest
 @Testcontainers
-@Import({ UserITSupport.class, TestContainersConfig.class })
 @ActiveProfiles("test")
+@Import({ UserITSupport.class, TestContainersConfig.class })
 public class UserRepositoryIT {
     @Autowired
     private UserRepository userRepository;
