@@ -22,7 +22,7 @@ jobs:
     - name: JDK setup
       uses: actions/setup-java@v4
       with:
-        java-version: '21'
+        java-version: '24'
         distribution: 'temurin'
         cache: maven
         cache-dependency-path: ./impl/pom.xml
@@ -53,7 +53,7 @@ jobs:
     - name: JDK setup
       uses: actions/setup-java@v4
       with:
-        java-version: '21'
+        java-version: '24'
         distribution: 'temurin'
         cache: maven
         cache-dependency-path: ./impl/pom.xml
