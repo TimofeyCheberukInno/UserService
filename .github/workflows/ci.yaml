@@ -22,7 +22,7 @@ jobs:
     - name: JDK setup
       uses: actions/setup-java@v4
       with:
-        java-version: '24'
+        java-version: '21'
         distribution: 'temurin'
         cache: maven
         cache-dependency-path: ./impl/pom.xml
@@ -53,7 +53,7 @@ jobs:
     - name: JDK setup
       uses: actions/setup-java@v4
       with:
-        java-version: '24'
+        java-version: '21'
         distribution: 'temurin'
         cache: maven
         cache-dependency-path: ./impl/pom.xml
@@ -63,6 +63,9 @@ jobs:
       with:
         name: compiled-classes
         path: ./impl/target/classes
+        
+    - name: Check Docker
+      run: docker info
         
     - name: Tests with JaCoCo coverage
       run: mvn verify -q
