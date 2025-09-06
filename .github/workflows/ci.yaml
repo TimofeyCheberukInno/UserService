@@ -53,7 +53,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Build Docker image
-      run: docker build -t user-service:latest -f ./impl/Dockerfile./impl
+      run: docker build -t user-service:latest -f ./impl/Dockerfile ./impl
 
     - name: Save Docker image to tar
       run: docker save user-service:latest | gzip > user-service.tar.gz
