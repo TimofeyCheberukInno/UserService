@@ -25,9 +25,6 @@ public class TestContainersConfig {
     @ServiceConnection
     public PostgreSQLContainer<?> postgreSQLContainer() {
         return new PostgreSQLContainer<>("postgres:17-alpine")
-                .withDatabaseName("testdb")
-                .withUsername("test")
-                .withPassword("test")
                 .withStartupTimeout(Duration.ofMinutes(2));
     }
 }
