@@ -64,7 +64,7 @@ jobs:
         name: compiled-classes
         path: ./impl/target/classes
         
-    - name: Check Docker
+    - name: Checking Docker state
       run: docker info
         
     - name: Tests with JaCoCo coverage
@@ -77,3 +77,16 @@ jobs:
       with:
         name: tests-results
         path: ./impl/target/surefire-reports/
+        
+    - name: SonarQube analysis
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      run: |
+        mvn sonar:sonar \
+          -Dsonar.projectKey=${{ github.repository }} \
+          -Dsonar.java.binaries=target/classes \
+          -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
+          -Dsonar.host.url=$SONAR_HOST_URL \
+          -Dsonar.login=$SONAR_TOKEN
+      working-directory: ./impl
