@@ -89,5 +89,7 @@ jobs:
     - name: SonarQube analysis
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}     
-      run: mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=TimofeyCheberukInno_UserService
+      run: mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+        -Dsonar.projectKey=TimofeyCheberukInno_UserService \
+        -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
       working-directory: ./impl
