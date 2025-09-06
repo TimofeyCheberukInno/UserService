@@ -120,3 +120,25 @@ jobs:
         -Dsonar.host.url=https://sonarcloud.io \
         -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
       working-directory: ./impl
+      
+  docker:
+    name: Build Docker Image (Artifact)
+    runs-on: ubuntu-latest
+    needs: build
+    if: needs.build.result == 'success'
+
+    steps:
+    - name: Checkout repository code
+      uses: actions/checkout@v4
+
+    - name: Build Docker image
+      run: docker build -t user-service:latest .
+
+    - name: Save Docker image to tar
+      run: docker save user-service:latest | gzip > user-service.tar.gz
+
+    - name: Upload Docker image as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: user-service-docker-image
+        path: user-service.tar.gz
