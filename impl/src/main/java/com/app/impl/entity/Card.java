@@ -41,7 +41,7 @@ public class Card {
 	@Column(name = "user_id", nullable = false)
 	private Long userId;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+	@ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
 	@JoinColumn(name = "user_entity", nullable = false)
 	private User user;
 
