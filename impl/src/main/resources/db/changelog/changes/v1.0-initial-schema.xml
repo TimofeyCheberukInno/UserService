@@ -52,7 +52,7 @@
 
             <addForeignKeyConstraint
                     baseTableName="card_info"
-                    baseColumnNames="user_id"
+                    baseColumnNames="user_entity"
                     constraintName="fk_card_user"
                     referencedTableName="users"
                     referencedColumnNames="id"
