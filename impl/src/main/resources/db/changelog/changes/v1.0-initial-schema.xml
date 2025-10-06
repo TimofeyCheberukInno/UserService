@@ -59,11 +59,12 @@
                     onDelete="CASCADE"
             />
 
-            <createIndex tableName="card_info" indexName="idx_user_id">
+            <createIndex tableName="card_info" indexName="idx_card_info_user_id">
                 <column name="user_id"/>
             </createIndex>
 
             <rollback>
+                <dropIndex tableName="card_info" indexName="idx_card_info_user_id"/>
                 <dropForeignKeyConstraint
                         baseTableName="card_info"
                         constraintName="fk_card_user"/>

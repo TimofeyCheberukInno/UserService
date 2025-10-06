@@ -52,7 +52,7 @@ services:
 
 volumes:
   db_data:
-    name: db_data
+    name: ${SERVICE_NAME}_db_data
   cache_data:
     name: cache_data
 
