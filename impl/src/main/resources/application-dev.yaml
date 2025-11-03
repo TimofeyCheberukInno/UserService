@@ -13,3 +13,22 @@ spring:
 
   cache:
     type: redis
+
+management:
+  server:
+    port: 9001
+  endpoints:
+    web:
+      exposure:
+        include: health
+      base-path: /internal/user-service/actuator
+  endpoint:
+    health:
+      group:
+        readiness:
+          include:
+            - db
+            - redis
+        liveness:
+          include:
+            - ping
